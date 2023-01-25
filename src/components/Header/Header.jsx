@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import profileIcon from '../../images/profileIcon.svg';
 import searchIcon from '../../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 function Header() {
   const { pathname } = useLocation();
@@ -48,6 +49,7 @@ function Header() {
           type="text"
         />)
         : ''}
+      <SearchBar />
     </div>
   );
 }
