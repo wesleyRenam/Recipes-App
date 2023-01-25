@@ -41,3 +41,22 @@ describe('test login if"s works correctly', () => {
     expect(history.location.pathname).toBe('/meals');
   });
 });
+
+describe('test with footer works correctly', () => {
+  it('should be render on bottom page', () => {
+    const initialEntries = ['/meals'];
+    const { history } = renderWithRouter(<App />, { initialEntries });
+
+    const drinkIcon = screen.getByRole('img', { name: /icone bebida/i });
+    const foodIcon = screen.getByRole('img', {
+      name: /icone comida/i,
+    });
+
+    expect(drinkIcon).toBeInTheDocument();
+    expect(foodIcon).toBeInTheDocument();
+
+    userEvent.click(drinkIcon);
+
+    expect(history.location.pathname).toBe('/drinks');
+  });
+});
