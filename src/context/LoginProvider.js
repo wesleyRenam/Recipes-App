@@ -1,7 +1,7 @@
 import React, { createContext, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 
-const LoginContext = createContext({});
+export const LoginContext = createContext({});
 
 function LoginProvider({ children }) {
   const [email, setEmail] = useState('');
