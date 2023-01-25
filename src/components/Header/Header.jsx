@@ -1,30 +1,53 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import profileIcon from '../../images/profileIcon.svg';
 import searchIcon from '../../images/searchIcon.svg';
 
 function Header() {
   const { pathname } = useLocation();
 
+  const history = useHistory();
+
   let str = pathname.replace(/-/g, ' ');
   str = str.replace(/\b\w/g, (l) => l.toUpperCase());
   str = str.replace('/', '');
-  const pesquisa = pathname === '/done-recipes' || '/favorite-recipes' || '/profile":';
+
+  const [searchBar, setSearchBar] = useState(false);
+
+  const pesquisa = (pathname === '/meals' || pathname === '/drinks');
   return (
     <div>
-      { !pesquisa ? <img
-        src={ searchIcon }
-        alt="profile-icon"
-        data-testid="search-top-btn"
-      /> : ''}
+      <button
+        type="button"
+        onClick={ () => history.push('/profile') }
+      >
+        <img
+          src={ profileIcon }
+          alt="profile-icon"
+          data-testid="profile-top-btn"
+        />
+      </button>
+      { pesquisa ? (
+        <button
+          type="button"
+          onClick={ () => setSearchBar(!searchBar) }
+        >
+          <img
+            src={ searchIcon }
+            alt="search-icon"
+            data-testid="search-top-btn"
+          />
+        </button>
+      ) : ''}
       <h1 data-testid="page-title">
         { str }
       </h1>
-      <img
-        src={ profileIcon }
-        alt="profile-icon"
-        data-testid="profile-top-btn"
-      />
+      { searchBar ? (
+        <input
+          data-testid="search-input"
+          type="text"
+        />)
+        : ''}
     </div>
   );
 }
