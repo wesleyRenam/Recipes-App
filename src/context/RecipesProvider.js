@@ -9,6 +9,8 @@ function RecipesProvider({ children }) {
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const { makeFetch, isLoading } = useFetch();
+  const [typeSearch, setTypeSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     const realizeFetch = async () => {
@@ -21,8 +23,8 @@ function RecipesProvider({ children }) {
   }, []);
 
   const values = useMemo(() => ({
-    meals, drinks, isLoading,
-  }), [meals, drinks, isLoading]);
+    meals, drinks, isLoading, typeSearch, setTypeSearch, searchInput, setSearchInput,
+  }), [meals, drinks, isLoading, typeSearch, searchInput]);
 
   return (
     <RecipesContext.Provider value={ values }>

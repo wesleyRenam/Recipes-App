@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { RecipesContext } from '../../context/RecipesProvider';
 
 function SearchBar() {
+  const { setTypeSearch } = useContext(RecipesContext);
   return (
     <div>
       <label htmlFor="ingredient-search-radio">
@@ -9,6 +11,8 @@ function SearchBar() {
           data-testid="ingredient-search-radio"
           type="radio"
           name="search-radio-buttons"
+          value="ingrediente"
+          onClick={ (e) => { setTypeSearch(e.target.value); } }
         />
         Ingrediente
       </label>
@@ -18,6 +22,8 @@ function SearchBar() {
           data-testid="name-search-radio"
           type="radio"
           name="search-radio-buttons"
+          value="nome"
+          onClick={ (e) => { setTypeSearch(e.target.value); } }
         />
         Nome
       </label>
@@ -27,6 +33,8 @@ function SearchBar() {
           data-testid="first-letter-search-radio"
           type="radio"
           name="search-radio-buttons"
+          value="primeira-letra"
+          onClick={ (e) => { setTypeSearch(e.target.value); } }
         />
         Primeira Letra
       </label>
