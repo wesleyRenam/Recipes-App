@@ -4,15 +4,14 @@ import Recipes from '../../components/Recipes/Recipes';
 import { RecipesContext } from '../../context/RecipesProvider';
 import Header from '../../components/Header/Header';
 
-
 function Drinks() {
-  const { drinks, isLoading } = useContext(RecipesContext);
+  const { drinks, categoryDrinks, isLoading } = useContext(RecipesContext);
 
   return (
     <div>
-      <Recipes recipe={ drinks } isLoading={ isLoading } />
-      <Footer />
       <Header />
+      <Recipes recipe={ drinks } categorys={ categoryDrinks } isLoading={ isLoading } />
+      <Footer />
     </div>
   );
 }
