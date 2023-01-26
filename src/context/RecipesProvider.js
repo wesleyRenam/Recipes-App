@@ -16,6 +16,8 @@ function RecipesProvider({ children }) {
   const { makeFetch, isLoading } = useFetch();
   const [typeSearch, setTypeSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [detailMeal, setDetailMeal] = useState(['']);
+  const [detailDrink, setDetailDrink] = useState(['']);
   const history = useHistory();
 
   useEffect(() => {
@@ -40,6 +42,14 @@ function RecipesProvider({ children }) {
   const setFilterOnCategoryDrink = async (category) => {
     const dataDrinks = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category}`);
     setFilterRecipes(dataDrinks.drinks);
+  };
+  const setMealDetails = async (id) => {
+    const detMeal = await makeFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+    setDetailMeal(detMeal.meals);
+  };
+  const setDrinkDetails = async (id) => {
+    const detDrink = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
+    setDetailDrink(detDrink.drinks);
   };
 
   const resetFilterOnCategory = () => {
@@ -143,6 +153,10 @@ function RecipesProvider({ children }) {
     onButtonSearchClickMeals,
     isFilter,
     setIsFilter,
+    detailMeal,
+    setMealDetails,
+    detailDrink,
+    setDrinkDetails,
   }), [
     meals,
     drinks,
@@ -153,6 +167,10 @@ function RecipesProvider({ children }) {
     typeSearch,
     searchInput,
     isFilter,
+    detailMeal,
+    setMealDetails,
+    detailDrink,
+    setDrinkDetails,
   ]);
 
   return (
