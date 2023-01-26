@@ -4,39 +4,6 @@ import { Link } from 'react-router-dom';
 import Header from '../../components/Header/Header';
 import shareSvg from '../../images/shareIcon.svg';
 
-const mockLocalStorage = [
-  {
-    id: '52977',
-    type: 'meal',
-    nationality: 'Turkish',
-    category: 'Side',
-    alcoholicOrNot: '',
-    name: 'Corba',
-    image: 'https://www.themealdb.com/images/media/meals/58oia61564916529.jpg',
-    doneDate: '26/01/2023',
-    tags: ['Soup'],
-  }, {
-    id: '52978',
-    type: 'meal',
-    nationality: 'Turkish',
-    category: 'Side',
-    alcoholicOrNot: '',
-    name: 'Kumpir',
-    image: 'https://www.themealdb.com/images/media/meals/mlchx21564916997.jpg',
-    doneDate: '26/01/2023',
-    tags: ['Soup'],
-  }, {
-    id: '17222',
-    type: 'drink',
-    nationality: '',
-    category: 'Cocktail',
-    alcoholicOrNot: 'Alcoholic',
-    name: 'A1',
-    image: 'https://www.thecocktaildb.com/images/media/drink/2x8thr1504816928.jpg',
-    doneDate: '27/01/2023',
-    tags: [],
-  }];
-
 function DoneRecipes() {
   const [copied, setCopied] = useState('');
   const [filter, setFilter] = useState([]);
