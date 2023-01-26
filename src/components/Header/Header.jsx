@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { RecipesContext } from '../../context/RecipesProvider';
 import profileIcon from '../../images/profileIcon.svg';
 import searchIcon from '../../images/searchIcon.svg';
 import SearchBar from './SearchBar';
@@ -16,6 +17,8 @@ function Header() {
   const [searchBar, setSearchBar] = useState(false);
 
   const pesquisa = (pathname === '/meals' || pathname === '/drinks');
+
+  const { searchInput, setSearchInput } = useContext(RecipesContext);
   return (
     <div>
       <button
@@ -44,12 +47,16 @@ function Header() {
         { str }
       </h1>
       { searchBar ? (
-        <input
-          data-testid="search-input"
-          type="text"
-        />)
+        <div>
+          <input
+            data-testid="search-input"
+            type="text"
+            value={ searchInput }
+            onChange={ (e) => { setSearchInput(e.target.value); } }
+          />
+          <SearchBar />
+        </div>)
         : ''}
-      <SearchBar />
     </div>
   );
 }
