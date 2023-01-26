@@ -32,10 +32,10 @@ function App() {
       <Route path="/done-recipes">
         <DoneRecipes />
       </Route>
-      <Route path="/meals/:id-da-receita" component={ MealsDetails } exact />
-      <Route path="/drinks/:id-da-receita" component={ DrinksDetails } exact />
-      <Route path="/meals/:id-da-receita/in-progress" component={ MealsInProgress } />
-      <Route path="/drinks/:id-da-receita/in-progress" component={ DrinksInProgress } />
+      <Route path="/meals/:id" component={ MealsDetails } exact />
+      <Route path="/drinks/:id" component={ DrinksDetails } exact />
+      <Route path="/meals/:id/in-progress" component={ MealsInProgress } />
+      <Route path="/drinks/:id/in-progress" component={ DrinksInProgress } />
     </Switch>
   );
 }

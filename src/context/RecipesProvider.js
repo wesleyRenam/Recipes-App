@@ -11,6 +11,7 @@ function RecipesProvider({ children }) {
   const [categoryMeals, setCategoryMeals] = useState([]);
   const [categoryDrinks, setCategoryDrinks] = useState([]);
   const [filterRecipes, setFilterRecipes] = useState([]);
+  const [isFilter, setIsFilter] = useState(false);
   const { makeFetch, isLoading } = useFetch();
 
   useEffect(() => {
@@ -51,6 +52,8 @@ function RecipesProvider({ children }) {
     setFilterOnCategoryDrink,
     setFilterOnCategoryMeal,
     resetFilterOnCategory,
+    isFilter,
+    setIsFilter,
   }), [
     meals,
     drinks,
@@ -58,6 +61,7 @@ function RecipesProvider({ children }) {
     categoryDrinks,
     categoryMeals,
     filterRecipes,
+    isFilter,
   ]);
 
   return (
