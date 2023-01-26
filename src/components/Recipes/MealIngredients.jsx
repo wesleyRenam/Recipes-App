@@ -2,21 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 function MealIngredients(props) {
-  const { mealIng, isLoading } = props;
+  const { mealIng } = props;
 
   const ingArray = [];
   const measureArray = [];
+
+  console.log(mealIng[0]);
+
   const mealKeys = Object.keys(mealIng[0])
     .filter((eachIng) => eachIng.includes('strIngredient'));
+
   const measureKeys = Object.keys(mealIng[0])
     .filter((eachIng) => eachIng.includes('strMeasure'));
+
+  const verifyPropertyContent = (key) => mealIng[0][key] !== null
+  && mealIng[0][key] !== '' && mealIng[0][key] !== ' ';
+
   mealKeys.forEach((mealKey) => {
-    if (mealIng[0][mealKey].length > 0) {
+    if (verifyPropertyContent(mealKey)) {
       ingArray.push(mealIng[0][mealKey]);
     }
   });
+
   measureKeys.forEach((measureKey) => {
-    if (mealIng[0][measureKey].length > 0) {
+    if (verifyPropertyContent(measureKey)) {
       measureArray.push(mealIng[0][measureKey]);
     }
   });
@@ -41,7 +50,6 @@ function MealIngredients(props) {
 
 MealIngredients.propTypes = {
   mealIng: PropTypes.arrayOf().isRequired,
-  isLoading: PropTypes.bool.isRequired,
 };
 
 export default MealIngredients;
