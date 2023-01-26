@@ -5,13 +5,13 @@ import { RecipesContext } from '../../context/RecipesProvider';
 import Header from '../../components/Header/Header';
 
 function Meals() {
-  const { meals, isLoading } = useContext(RecipesContext);
+  const { meals, categoryMeals, isLoading } = useContext(RecipesContext);
 
   return (
     <div>
-      <Recipes recipe={ meals } isLoading={ isLoading } />
-      <Footer />
       <Header />
+      <Recipes recipe={ meals } isLoading={ isLoading } categorys={ categoryMeals } />
+      <Footer />
     </div>
   );
 }
