@@ -53,6 +53,10 @@ function RecipesProvider({ children }) {
     setFilterOnCategoryDrink,
     setFilterOnCategoryMeal,
     resetFilterOnCategory,
+    typeSearch,
+    setTypeSearch,
+    searchInput,
+    setSearchInput,
   }), [
     meals,
     drinks,
@@ -60,9 +64,9 @@ function RecipesProvider({ children }) {
     categoryDrinks,
     categoryMeals,
     filterRecipes,
+    typeSearch,
+    searchInput,
   ]);
-    meals, drinks, isLoading, typeSearch, setTypeSearch, searchInput, setSearchInput,
-  }), [meals, drinks, isLoading, typeSearch, searchInput]);
 
   return (
     <RecipesContext.Provider value={ values }>
