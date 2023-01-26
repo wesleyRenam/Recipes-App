@@ -89,10 +89,9 @@ function Recipes(props) {
             <Link
               to={ redirectToRecipe(item.idDrink || item.idMeal) }
               key={ item.idDrink || item.idMeal }
+              data-testid={ `${index}-recipe-card` }
             >
-              <div
-                data-testid={ `${index}-recipe-card` }
-              >
+              <div>
                 <img
                   data-testid={ `${index}-card-img` }
                   src={ item.strDrinkThumb || item.strMealThumb }
