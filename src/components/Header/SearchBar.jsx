@@ -1,8 +1,10 @@
 import React, { useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { RecipesContext } from '../../context/RecipesProvider';
 
 function SearchBar() {
-  const { setTypeSearch } = useContext(RecipesContext);
+  const { setTypeSearch, onButtonSearchClickMeals } = useContext(RecipesContext);
+  const { pathname } = useLocation();
   return (
     <div>
       <label htmlFor="ingredient-search-radio">
@@ -41,6 +43,15 @@ function SearchBar() {
       <button
         type="button"
         data-testid="exec-search-btn"
+        onClick={ () => {
+          if (pathname === '/meals') {
+            onButtonSearchClickMeals('themealdb');
+            return;
+          }
+          if (pathname === '/drinks') {
+            onButtonSearchClickMeals('thecocktaildb');
+          }
+        } }
       >
         Buscar
       </button>

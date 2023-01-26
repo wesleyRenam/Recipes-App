@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { RecipesContext } from '../../context/RecipesProvider';
 import profileIcon from '../../images/profileIcon.svg';
@@ -47,14 +47,16 @@ function Header() {
         { str }
       </h1>
       { searchBar ? (
-        <input
-          data-testid="search-input"
-          type="text"
-          value={ searchInput }
-          onChange={ (e) => { setSearchInput(e.target.value); } }
-        />)
+        <div>
+          <input
+            data-testid="search-input"
+            type="text"
+            value={ searchInput }
+            onChange={ (e) => { setSearchInput(e.target.value); } }
+          />
+          <SearchBar />
+        </div>)
         : ''}
-      <SearchBar />
     </div>
   );
 }
