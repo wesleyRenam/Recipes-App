@@ -1,4 +1,4 @@
-import { findByTestId, findByText, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FavoriteRecipes from '../pages/FavoriteRecipes/FavoriteRecipes';
 import { renderWithRouter } from './helpers/RenderWithRouter';
