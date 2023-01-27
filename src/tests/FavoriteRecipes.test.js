@@ -146,7 +146,7 @@ describe('test done recipes page', () => {
     userEvent.click(favoriteButton);
     expect(recipesImage()).toHaveLength(1);
   });
-  it('should copy button render and works correctly after one filter', () => {
+  it('should shares button render and works correctly after one filter', () => {
     const initialEntries = ['/favorite-recipes'];
     renderWithRouter(<FavoriteRecipes />, { initialEntries });
     JSON.parse(localStorage.getItem('FavoriteRecipes'));

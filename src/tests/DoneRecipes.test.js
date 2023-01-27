@@ -120,4 +120,23 @@ describe('test done recipes page', () => {
     expect(mockedWriteText).toHaveBeenCalledTimes(1);
     expect(mockedWriteText).toHaveBeenCalledWith('http://localhost:3000/meals/52771');
   });
+  it('should copy button render and works correctly after one filter', () => {
+    const initialEntries = ['/favorite-recipes'];
+    renderWithRouter(<DoneRecipes />, { initialEntries });
+    JSON.parse(localStorage.getItem('FavoriteRecipes'));
+
+    const MealButton = screen.getByRole('button', {
+      name: /meals/i,
+    });
+
+    userEvent.click(MealButton);
+
+    const buttons = screen.getAllByRole('button');
+    expect(buttons).toHaveLength(5);
+
+    const shareButton = screen.getByTestId('0-horizontal-share-btn');
+    userEvent.click(shareButton);
+
+    expect(recipesImage()).toHaveLength(1);
+  });
 });
