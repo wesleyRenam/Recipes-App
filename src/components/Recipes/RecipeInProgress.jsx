@@ -3,27 +3,14 @@ import { useHistory } from 'react-router-dom';
 import useFetch from '../../hooks/useFetch';
 import Ingredient from './Ingredient';
 
-const itens = [{
-  drinks: {
-    15997: ['Galliano'],
-    17222: ['Gin', 'Grand Marnier'],
-    13501: [],
-  },
-  meals: {
-    52977: ['Lentils'],
-    52978: [''],
-    52785: ['Toor dal', 'Water'],
-  },
-}];
-
 function RecipeInProgress() {
   const history = useHistory();
   const [recipes, setRecipes] = useState([]);
-  const { makeFetch } = useFetch();
-  // const getItens = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  const { makeFetch, isLoading } = useFetch();
+
+  const id = history.location.pathname.split('/')[2];
 
   useEffect(() => {
-    const id = history.location.pathname.split('/')[2];
     const fetch = async () => {
       if (history.location.pathname === `/drinks/${id}/in-progress`) {
         const data = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
@@ -36,19 +23,7 @@ function RecipeInProgress() {
     fetch();
   }, []);
 
-  const handleChange = () => {
-
-  };
-
-  const validateCheck = (recipe) => {
-    const recoverType = history.location.pathname.split('/')[1];
-    const recoverId = history.location.pathname.split('/')[2];
-    const isCheck = itens.some((e) => e[recoverType][recoverId].includes(recipe));
-
-    console.log(recipe);
-    console.log(isCheck);
-    return true;
-  };
+  if (isLoading) return 'Loading....';
 
   return (
     <div>
@@ -77,19 +52,18 @@ function RecipeInProgress() {
             id={ recipe.strIngredient1 }
             index={ 0 }
             element={ recipe.strIngredient1 }
-            validate={ validateCheck(recipe.strIngredient1) }
           /> : ''}
           { recipe.strIngredient2 ? <Ingredient
             id={ recipe.strIngredient2 }
             index={ 1 }
             element={ recipe.strIngredient2 }
-            validate={ validateCheck(recipe.strIngredient2) }
+
           /> : ''}
           { recipe.strIngredient3 ? <Ingredient
             id={ recipe.strIngredient3 }
             index={ 2 }
             element={ recipe.strIngredient3 }
-            validate={ validateCheck(recipe.strIngredient3) }
+
           /> : ''}
           { recipe.strIngredient4 ? <Ingredient
             id={ recipe.strIngredient4 }
@@ -125,7 +99,6 @@ function RecipeInProgress() {
           <button
             type="button"
             data-testid="share-btn"
-            onClick={ handleChange }
           >
             Compartilhar
 
