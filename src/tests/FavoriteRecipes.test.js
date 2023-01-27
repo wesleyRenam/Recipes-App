@@ -127,4 +127,42 @@ describe('test done recipes page', () => {
 
     expect(recipesImage()).toHaveLength(1);
   });
+  it('should favorite button render and works correctly after one filter', () => {
+    const initialEntries = ['/favorite-recipes'];
+    renderWithRouter(<FavoriteRecipes />, { initialEntries });
+    JSON.parse(localStorage.getItem('FavoriteRecipes'));
+
+    const MealButton = screen.getByRole('button', {
+      name: /meals/i,
+    });
+
+    userEvent.click(MealButton);
+
+    const buttons = screen.getAllByRole('button');
+    expect(buttons).toHaveLength(6);
+
+    const favoriteButton = screen.getByTestId('0-horizontal-favorite-btn');
+
+    userEvent.click(favoriteButton);
+    expect(recipesImage()).toHaveLength(1);
+  });
+  it('should copy button render and works correctly after one filter', () => {
+    const initialEntries = ['/favorite-recipes'];
+    renderWithRouter(<FavoriteRecipes />, { initialEntries });
+    JSON.parse(localStorage.getItem('FavoriteRecipes'));
+
+    const MealButton = screen.getByRole('button', {
+      name: /meals/i,
+    });
+
+    userEvent.click(MealButton);
+
+    const buttons = screen.getAllByRole('button');
+    expect(buttons).toHaveLength(6);
+
+    const shareButton = screen.getByTestId('0-horizontal-share-btn');
+    userEvent.click(shareButton);
+
+    expect(recipesImage()).toHaveLength(1);
+  });
 });
