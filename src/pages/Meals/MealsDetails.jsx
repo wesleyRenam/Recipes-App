@@ -1,7 +1,10 @@
 import React, { useEffect, useContext } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { RecipesContext } from '../../context/RecipesProvider';
 import MealIngredients from '../../components/Recipes/MealIngredients';
+import CarouselCards from '../../components/Recipes/CarouselCard';
+import shareIcon from '../../images/shareIcon.svg';
+import favoriteIcon from '../../images/whiteHeartIcon.svg';
 
 function MealsDetails() {
   const { setMealDetails, detailMeal, isLoading } = useContext(RecipesContext);
@@ -31,7 +34,28 @@ function MealsDetails() {
         src={ detailMeal[0].strYoutube }
       />
       <MealIngredients mealIng={ detailMeal } isLoading={ isLoading } />
-
+      <button
+        type="submit"
+        data-testid="share-btn"
+      >
+        <img src={ shareIcon } alt="shareIcon" />
+      </button>
+      <button
+        type="submit"
+        data-testid="favorite-btn"
+      >
+        <img src={ favoriteIcon } alt="favoriteIcon" />
+      </button>
+      <CarouselCards type={ pathname.split('/')[1] } />
+      <Link to={ `/meals/${id}/in-progress` }>
+        <button
+          type="submit"
+          data-testid="start-recipe-btn"
+          style={ { position: 'fixed', bottom: '0px' } }
+        >
+          Start Recipe
+        </button>
+      </Link>
     </div>
   );
 }
