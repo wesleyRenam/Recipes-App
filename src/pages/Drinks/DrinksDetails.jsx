@@ -7,12 +7,26 @@ import shareIcon from '../../images/shareIcon.svg';
 import favoriteIcon from '../../images/whiteHeartIcon.svg';
 
 function DrinksDetails() {
-  const { detailDrink, setDrinkDetails, isLoading } = useContext(RecipesContext);
+  const { detailDrink, setDrinkDetails, isLoading, copyMsg,
+    handleClickCopy } = useContext(RecipesContext);
   const { pathname } = useLocation();
   const id = pathname.split('/')[2];
   useEffect(() => {
     setDrinkDetails(id);
   }, []);
+
+  const favoriteBtn = () => {
+    localStorage.setItem('favoriteRecipes', JSON.stringify([{
+      id: detailDrink[0].idDrink,
+      type: 'drink',
+      nationality: (detailDrink[0].strArea === null
+        || detailDrink[0].strArea === undefined ? '' : detailDrink[0].strArea),
+      category: detailDrink[0].strCategory,
+      alcoholicOrNot: detailDrink[0].strAlcoholic,
+      name: detailDrink[0].strDrink,
+      image: detailDrink[0].strDrinkThumb,
+    }]));
+  };
   if (isLoading) return 'Carregando';
   return (
     <div>
@@ -31,12 +45,15 @@ function DrinksDetails() {
       <button
         type="submit"
         data-testid="share-btn"
+        onClick={ () => handleClickCopy(pathname) }
       >
         <img src={ shareIcon } alt="shareIcon" />
       </button>
+      <p>{copyMsg}</p>
       <button
         type="submit"
         data-testid="favorite-btn"
+        onClick={ () => favoriteBtn() }
       >
         <img src={ favoriteIcon } alt="favoriteIcon" />
       </button>

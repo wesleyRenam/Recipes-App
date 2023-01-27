@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import copy from 'clipboard-copy';
 import { useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 
@@ -18,6 +19,7 @@ function RecipesProvider({ children }) {
   const [searchInput, setSearchInput] = useState('');
   const [detailMeal, setDetailMeal] = useState(['']);
   const [detailDrink, setDetailDrink] = useState(['']);
+  const [copyMsg, setCopyMsg] = useState('');
   const history = useHistory();
 
   useEffect(() => {
@@ -91,6 +93,12 @@ function RecipesProvider({ children }) {
     setIsFilter(!isFilter);
   };
 
+  const handleClickCopy = (path) => {
+    const copiedUrl = `http://localhost:3000${path}`;
+    setCopyMsg('Link copied!');
+    copy(copiedUrl);
+  };
+
   const onButtonSearchClickMeals = async (url) => {
     let dataSearch;
     switch (typeSearch) {
@@ -157,6 +165,8 @@ function RecipesProvider({ children }) {
     setMealDetails,
     detailDrink,
     setDrinkDetails,
+    copyMsg,
+    handleClickCopy,
   }), [
     meals,
     drinks,
@@ -171,6 +181,8 @@ function RecipesProvider({ children }) {
     setMealDetails,
     detailDrink,
     setDrinkDetails,
+    copyMsg,
+    handleClickCopy,
   ]);
 
   return (
