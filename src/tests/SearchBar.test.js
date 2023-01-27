@@ -2,9 +2,9 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import renderWithRouter from '../helpers/renderWithRouter';
 import RecipesProvider from '../context/RecipesProvider';
 import Header from '../components/Header/Header';
+import { renderWithRouter } from './helpers/RenderWithRouter';
 
 describe('Testa o componente Header, e verifica: ', () => {
   const dataTestIdButtonToSearch = 'exec-search-btn';
@@ -55,6 +55,8 @@ describe('Testa o componente Header, e verifica: ', () => {
     const radioButtonLetter = screen.getByTestId('first-letter-search-radio');
     userEvent.click(radioButtonLetter);
     const buttonToSearch = screen.getByTestId(dataTestIdButtonToSearch);
-    userEvent.click(buttonToSearch);
+    const event = userEvent.click(buttonToSearch);
+
+    console.log(event);
   });
 });
