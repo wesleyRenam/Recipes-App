@@ -1,6 +1,5 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import LoginProvider from '../context/LoginProvider';
 import Profile from '../pages/Profile/Profile';
 import { renderWithRouter } from './helpers/RenderWithRouter';
 
