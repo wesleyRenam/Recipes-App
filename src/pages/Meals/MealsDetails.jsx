@@ -4,30 +4,22 @@ import { RecipesContext } from '../../context/RecipesProvider';
 import MealIngredients from '../../components/Recipes/MealIngredients';
 import CarouselCards from '../../components/Recipes/CarouselCard';
 import shareIcon from '../../images/shareIcon.svg';
-import favoriteIcon from '../../images/whiteHeartIcon.svg';
+import favWhiteIcon from '../../images/whiteHeartIcon.svg';
+import favBlackIcon from '../../images/blackHeartIcon.svg';
 
 function MealsDetails() {
   const { setMealDetails, detailMeal, isLoading, copyMsg,
-    handleClickCopy } = useContext(RecipesContext);
+    handleClickCopy,
+    favoritos, favoriteBtn, removeFavorite } = useContext(RecipesContext);
   const { pathname } = useLocation();
   const id = pathname.split('/')[2];
   useEffect(() => {
     setMealDetails(id);
   }, []);
-  const favoriteBtn = () => {
-    localStorage.setItem('favoriteRecipes', JSON.stringify([{
-      id: detailMeal[0].idMeal,
-      type: 'meal',
-      nationality: (detailMeal[0].strArea === null
-        || detailMeal[0].strArea === undefined ? '' : detailMeal[0].strArea),
-      category: detailMeal[0].strCategory,
-      alcoholicOrNot: (detailMeal[0].strAlcoholic === null
-        || detailMeal[0].strAlcoholic === undefined ? '' : detailMeal[0].strAlcoholic),
-      name: detailMeal[0].strMeal,
-      image: detailMeal[0].strMealThumb,
-    }]));
-  };
   if (isLoading) return 'Carregando';
+  const favorited = !favoritos
+    .some((favorite) => favorite
+      .id === detailMeal[0].idMeal);
   return (
     <div>
       <h1 data-testid="recipe-title">
@@ -58,10 +50,14 @@ function MealsDetails() {
       <p>{copyMsg}</p>
       <button
         type="submit"
-        data-testid="favorite-btn"
-        onClick={ () => favoriteBtn() }
+        onClick={ () => (favorited ? favoriteBtn(pathname
+          .split('/')[1]) : removeFavorite(pathname.split('/')[1])) }
       >
-        <img src={ favoriteIcon } alt="favoriteIcon" />
+        <img
+          data-testid="favorite-btn"
+          src={ favorited ? favWhiteIcon : favBlackIcon }
+          alt="favoriteIcon"
+        />
       </button>
       <CarouselCards type={ pathname.split('/')[1] } />
       <Link to={ `/meals/${id}/in-progress` }>

@@ -4,30 +4,22 @@ import CarouselCards from '../../components/Recipes/CarouselCard';
 import MealIngredients from '../../components/Recipes/MealIngredients';
 import { RecipesContext } from '../../context/RecipesProvider';
 import shareIcon from '../../images/shareIcon.svg';
-import favoriteIcon from '../../images/whiteHeartIcon.svg';
+import favWhiteIcon from '../../images/whiteHeartIcon.svg';
+import favBlackIcon from '../../images/blackHeartIcon.svg';
 
 function DrinksDetails() {
   const { detailDrink, setDrinkDetails, isLoading, copyMsg,
-    handleClickCopy } = useContext(RecipesContext);
+    handleClickCopy,
+    favoritos, favoriteBtn, removeFavorite } = useContext(RecipesContext);
   const { pathname } = useLocation();
   const id = pathname.split('/')[2];
   useEffect(() => {
     setDrinkDetails(id);
   }, []);
-
-  const favoriteBtn = () => {
-    localStorage.setItem('favoriteRecipes', JSON.stringify([{
-      id: detailDrink[0].idDrink,
-      type: 'drink',
-      nationality: (detailDrink[0].strArea === null
-        || detailDrink[0].strArea === undefined ? '' : detailDrink[0].strArea),
-      category: detailDrink[0].strCategory,
-      alcoholicOrNot: detailDrink[0].strAlcoholic,
-      name: detailDrink[0].strDrink,
-      image: detailDrink[0].strDrinkThumb,
-    }]));
-  };
   if (isLoading) return 'Carregando';
+  const favorited = !favoritos
+    .some((favorite) => favorite
+      .id === detailDrink[0].idDrink);
   return (
     <div>
       <h1 data-testid="recipe-title">
@@ -52,10 +44,14 @@ function DrinksDetails() {
       <p>{copyMsg}</p>
       <button
         type="submit"
-        data-testid="favorite-btn"
-        onClick={ () => favoriteBtn() }
+        onClick={ () => (favorited ? favoriteBtn(pathname
+          .split('/')[1]) : removeFavorite(pathname.split('/')[1])) }
       >
-        <img src={ favoriteIcon } alt="favoriteIcon" />
+        <img
+          data-testid="favorite-btn"
+          src={ favorited ? favWhiteIcon : favBlackIcon }
+          alt="favoriteIcon"
+        />
       </button>
       <CarouselCards type={ pathname.split('/')[1] } />
       <Link to={ `/drinks/${id}/in-progress` }>
