@@ -1,14 +1,29 @@
-import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import copy from 'clipboard-copy';
 import useFetch from '../../hooks/useFetch';
 import Ingredient from './Ingredient';
+import { RecipesContext } from '../../context/RecipesProvider';
+import shareIcon from '../../images/shareIcon.svg';
+import favWhiteIcon from '../../images/whiteHeartIcon.svg';
+import favBlackIcon from '../../images/blackHeartIcon.svg';
 
 function RecipeInProgress() {
   const history = useHistory();
   const [recipes, setRecipes] = useState([]);
   const { makeFetch, isLoading } = useFetch();
+  const [copied, setCopied] = useState('');
+
+  const { favoritos,
+    favoriteBtn,
+    removeFavorite,
+    setDrinkDetails,
+    setMealDetails,
+    detailMeal } = useContext(RecipesContext);
 
   const id = history.location.pathname.split('/')[2];
+  const type = history.location.pathname.split('/')[1];
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const fetch = async () => {
@@ -23,7 +38,27 @@ function RecipeInProgress() {
     fetch();
   }, []);
 
-  if (isLoading) return 'Loading....';
+  if (isLoading) return 'Carregando....';
+
+  let favorited;
+
+  if (pathname.split('/')[1] === 'drinks') {
+    favorited = !favoritos
+      .some((favorite) => favorite);
+    setDrinkDetails(id);
+  }
+
+  if (pathname.split('/')[1] === 'meals') {
+    favorited = !favoritos.some((favorite) => favorite
+      .id === detailMeal[0].idMeal);
+    setMealDetails(id);
+  }
+
+  const handleClick = () => {
+    const url = `http://localhost:3000/${type}/${id}`;
+    copy(url);
+    setCopied('Link copied!');
+  };
 
   return (
     <div>
@@ -98,11 +133,23 @@ function RecipeInProgress() {
           <button
             type="button"
             data-testid="share-btn"
+            onClick={ handleClick }
           >
-            Compartilhar
-
+            <img src={ shareIcon } alt="shareIcon" />
+            {copied}
           </button>
-          <button type="button" data-testid="favorite-btn">Favoritar</button>
+          <button
+            type="submit"
+            onClick={ () => (favorited ? favoriteBtn(pathname
+              .split('/')[1]) : removeFavorite(pathname.split('/')[1])) }
+          >
+            <img
+              data-testid="favorite-btn"
+              src={ favorited ? favWhiteIcon : favBlackIcon }
+              alt="favoriteIcon"
+            />
+          </button>
+          {' '}
           <button type="button" data-testid="finish-recipe-btn">Finalizar</button>
         </div>
       ))}
