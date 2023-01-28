@@ -63,7 +63,6 @@ function RecipeInProgress() {
             id={ recipe.strIngredient3 }
             index={ 2 }
             element={ recipe.strIngredient3 }
-
           /> : ''}
           { recipe.strIngredient4 ? <Ingredient
             id={ recipe.strIngredient4 }

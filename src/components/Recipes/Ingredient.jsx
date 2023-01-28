@@ -1,54 +1,54 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 
-const mock = {
+const initialEntry = {
   drinks: {
-    15997: ['Galliano'],
-    17222: ['Gin', 'Grand Marnier'],
-    13501: [],
+
   },
   meals: {
-    52977: ['Lentils'],
-    52978: [''],
-    52785: ['Toor dal', 'Water'],
+
   },
 };
 
 function Ingredient(props) {
-  // localStorage.setItem('inProgressRecipes', JSON.stringify(mock));
-
   const { id, index, element } = props;
+  const [storageItem, setStorageItem] = useState([]);
   const [isCheck, setIsCheck] = useState(false);
   const history = useHistory();
 
   const type = history.location.pathname.split('/')[1];
   const numberId = history.location.pathname.split('/')[2];
 
-  const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
+  useEffect(() => {
+    const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (!getItems) {
+      return localStorage.setItem('inProgressRecipes', JSON.stringify(initialEntry));
+    }
+    setStorageItem(getItems);
+  }, []);
 
-  const validateCheck = () => {
-    if (getItems[type][numberId] === undefined) {
-      getItems[type][`${numberId}`] = [''];
-      localStorage.setItem('inProgressRecipes', JSON.stringify(getItems));
+  const createAndUpdateItem = (item) => {
+    console.log('items array', item[type][numberId]);
+    if (item[type][numberId] === undefined) {
+      item[type][`${numberId}`] = [];
+      localStorage.setItem('inProgressRecipes', JSON.stringify(item));
       return;
     }
-    const isDone = getItems[type][numberId].some((e) => e === element);
-    setIsCheck(isDone);
-  };
-
-  const handleChange = () => {
-    const actualKey = getItems[type][numberId];
-    actualKey.push(...actualKey, element);
-    console.log(element);
-    console.log(actualKey);
-    console.log(getItems);
-    // localStorage.setItem('inProgressRecipes', JSON.stringify(actualKey));
-    validateCheck();
+    const isDone = item[type][numberId].some((e) => e === element);
+    if (isDone) return setIsCheck(isDone);
   };
 
   useEffect(() => {
-    validateCheck();
+    const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    createAndUpdateItem(getItems);
   }, []);
+
+  const handleChange = () => {
+    const newStorage = storageItem[type][numberId].push(element);
+    localStorage.setItem('inProgressRecipes', JSON.stringify(storageItem));
+    setIsCheck(true);
+    setStorageItem(newStorage);
+  };
 
   return (
     <label
