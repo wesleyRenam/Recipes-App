@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
 const initialEntry = {
   drinks: {
@@ -12,7 +13,6 @@ const initialEntry = {
 
 function Ingredient(props) {
   const { id, index, element } = props;
-  const [storageItem, setStorageItem] = useState([]);
   const [isCheck, setIsCheck] = useState(false);
   const history = useHistory();
 
@@ -22,13 +22,11 @@ function Ingredient(props) {
   useEffect(() => {
     const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
     if (!getItems) {
-      return localStorage.setItem('inProgressRecipes', JSON.stringify(initialEntry));
+      localStorage.setItem('inProgressRecipes', JSON.stringify(initialEntry));
     }
-    setStorageItem(getItems);
   }, []);
 
   const createAndUpdateItem = (item) => {
-    console.log('items array', item[type][numberId]);
     if (item[type][numberId] === undefined) {
       item[type][`${numberId}`] = [];
       localStorage.setItem('inProgressRecipes', JSON.stringify(item));
@@ -44,10 +42,11 @@ function Ingredient(props) {
   }, []);
 
   const handleChange = () => {
-    const newStorage = storageItem[type][numberId].push(element);
-    localStorage.setItem('inProgressRecipes', JSON.stringify(storageItem));
+    const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    const newItem = getItems;
+    newItem[type][numberId].push(element);
+    localStorage.setItem('inProgressRecipes', JSON.stringify(newItem));
     setIsCheck(true);
-    setStorageItem(newStorage);
   };
 
   return (
@@ -56,7 +55,6 @@ function Ingredient(props) {
       style={ { textDecoration: isCheck
         ? 'line-through solid rgb(0, 0, 0)' : '' } }
       data-testid={ `${index}-ingredient-step` }
-
     >
       <input
         type="checkbox"
@@ -69,5 +67,11 @@ function Ingredient(props) {
     </label>
   );
 }
+
+Ingredient.propTypes = {
+  id: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  element: PropTypes.string.isRequired,
+};
 
 export default Ingredient;
