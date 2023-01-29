@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import CarouselCards from '../../components/Recipes/CarouselCard';
 import MealIngredients from '../../components/Recipes/MealIngredients';
@@ -11,10 +11,16 @@ function DrinksDetails() {
   const { detailDrink, setDrinkDetails, isLoading, copyMsg,
     handleClickCopy,
     favoritos, favoriteBtn, removeFavorite } = useContext(RecipesContext);
+  const [recipeStatus, setRecipeStatus] = useState('Start Recipe');
   const { pathname } = useLocation();
   const id = pathname.split('/')[2];
   useEffect(() => {
     setDrinkDetails(id);
+    if (JSON.parse(localStorage.getItem('inProgressRecipes'))) {
+      const inProgressRecipes = JSON.parse(localStorage.getItem('inProgressRecipes'));
+      const drinkProgress = inProgressRecipes.drinks[id];
+      if (drinkProgress) setRecipeStatus('Continue Recipe');
+    }
   }, []);
   if (isLoading) return 'Carregando';
   const favorited = !favoritos
@@ -60,7 +66,7 @@ function DrinksDetails() {
           data-testid="start-recipe-btn"
           style={ { position: 'fixed', bottom: '0px' } }
         >
-          Start Recipe
+          { recipeStatus }
         </button>
       </Link>
     </div>

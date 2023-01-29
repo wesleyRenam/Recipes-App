@@ -7,8 +7,6 @@ function MealIngredients(props) {
   const ingArray = [];
   const measureArray = [];
 
-  console.log(mealIng[0]);
-
   const mealKeys = Object.keys(mealIng[0])
     .filter((eachIng) => eachIng.includes('strIngredient'));
 

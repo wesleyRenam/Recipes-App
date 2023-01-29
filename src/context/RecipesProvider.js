@@ -17,12 +17,9 @@ function RecipesProvider({ children }) {
   const { makeFetch, isLoading } = useFetch();
   const [typeSearch, setTypeSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
-  const [detailMeal, setDetailMeal] = useState(['']);
-  const [detailDrink, setDetailDrink] = useState(['']);
   const [favoritos, setFavoritos] = useState([]);
   const [copyMsg, setCopyMsg] = useState('');
   const history = useHistory();
-
   useEffect(() => {
     const realizeFetch = async () => {
       const dataDrinks = await makeFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
@@ -49,11 +46,11 @@ function RecipesProvider({ children }) {
   };
   const setMealDetails = async (id) => {
     const detMeal = await makeFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-    setDetailMeal(detMeal.meals);
+    return detMeal.meals;
   };
   const setDrinkDetails = async (id) => {
     const detDrink = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
-    setDetailDrink(detDrink.drinks);
+    return detDrink.drinks;
   };
 
   const resetFilterOnCategory = () => {
@@ -71,7 +68,6 @@ function RecipesProvider({ children }) {
     if (array.length === 1) {
       switch (url) {
       case 'thecocktaildb':
-        console.log(array);
         history.push(`/drinks/${array[0].idDrink}`);
         break;
       case 'themealdb':
@@ -89,35 +85,36 @@ function RecipesProvider({ children }) {
     }
   };
 
-  const favoriteBtn = (type) => {
+  const favoriteBtn = (type, recipeDetail) => {
     let arrayFav = [];
     arrayFav = JSON.parse(localStorage.getItem('favoriteRecipes')) ?? [];
     if (type === 'drinks') {
       arrayFav.push(
         {
-          id: detailDrink[0].idDrink,
+          id: recipeDetail[0].idDrink,
           type: 'drink',
-          nationality: (detailDrink[0].strArea === null
-        || detailDrink[0].strArea === undefined ? '' : detailDrink[0].strArea),
-          category: detailDrink[0].strCategory,
-          alcoholicOrNot: detailDrink[0].strAlcoholic,
-          name: detailDrink[0].strDrink,
-          image: detailDrink[0].strDrinkThumb,
+          nationality: (recipeDetail[0].strArea === null
+        || recipeDetail[0].strArea === undefined ? '' : recipeDetail[0].strArea),
+          category: recipeDetail[0].strCategory,
+          alcoholicOrNot: recipeDetail[0].strAlcoholic,
+          name: recipeDetail[0].strDrink,
+          image: recipeDetail[0].strDrinkThumb,
         },
       );
       localStorage.setItem('favoriteRecipes', JSON.stringify(arrayFav));
     } else {
       arrayFav.push(
         {
-          id: detailMeal[0].idMeal,
+          id: recipeDetail[0].idMeal,
           type: 'meal',
-          nationality: (detailMeal[0].strArea === null
-          || detailMeal[0].strArea === undefined ? '' : detailMeal[0].strArea),
-          category: detailMeal[0].strCategory,
-          alcoholicOrNot: (detailMeal[0].strAlcoholic === null
-          || detailMeal[0].strAlcoholic === undefined ? '' : detailMeal[0].strAlcoholic),
-          name: detailMeal[0].strMeal,
-          image: detailMeal[0].strMealThumb,
+          nationality: (recipeDetail[0].strArea === null
+          || recipeDetail[0].strArea === undefined ? '' : recipeDetail[0].strArea),
+          category: recipeDetail[0].strCategory,
+          alcoholicOrNot: (recipeDetail[0].strAlcoholic === null
+          || recipeDetail[0].strAlcoholic === undefined ? '' : (
+              recipeDetail[0].strAlcoholic)),
+          name: recipeDetail[0].strMeal,
+          image: recipeDetail[0].strMealThumb,
         },
       );
       localStorage.setItem('favoriteRecipes', JSON.stringify(arrayFav));
@@ -125,17 +122,17 @@ function RecipesProvider({ children }) {
     setFavoritos(JSON.parse(localStorage.getItem('favoriteRecipes')) ?? []);
   };
 
-  const removeFavorite = (type) => {
+  const removeFavorite = (type, recipeDetail) => {
     let arrayFav = [];
     arrayFav = JSON.parse(localStorage.getItem('favoriteRecipes')) ?? [];
     if (type === 'meals') {
       localStorage.setItem('favoriteRecipes', JSON
-        .stringify(arrayFav.filter((each) => each.id !== detailMeal[0].idMeal)));
-      setFavoritos(favoritos.filter((each) => each.id !== detailMeal[0].idMeal));
+        .stringify(arrayFav.filter((each) => each.id !== recipeDetail[0].idMeal)));
+      setFavoritos(favoritos.filter((each) => each.id !== recipeDetail[0].idMeal));
     } else {
       localStorage.setItem('favoriteRecipes', JSON
-        .stringify(arrayFav.filter((each) => each.id !== detailDrink[0].idDrink)));
-      setFavoritos(favoritos.filter((each) => each.id !== detailDrink[0].idDrink));
+        .stringify(arrayFav.filter((each) => each.id !== recipeDetail[0].idDrink)));
+      setFavoritos(favoritos.filter((each) => each.id !== recipeDetail[0].idDrink));
     }
   };
 
@@ -213,9 +210,7 @@ function RecipesProvider({ children }) {
     onButtonSearchClickMeals,
     isFilter,
     setIsFilter,
-    detailMeal,
     setMealDetails,
-    detailDrink,
     setDrinkDetails,
     copyMsg,
     handleClickCopy,
@@ -233,9 +228,7 @@ function RecipesProvider({ children }) {
     typeSearch,
     searchInput,
     isFilter,
-    detailMeal,
     setMealDetails,
-    detailDrink,
     setDrinkDetails,
     copyMsg,
     handleClickCopy,
@@ -248,9 +241,7 @@ function RecipesProvider({ children }) {
     </RecipesContext.Provider>
   );
 }
-
 RecipesProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
 export default RecipesProvider;

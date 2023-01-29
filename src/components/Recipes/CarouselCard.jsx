@@ -7,6 +7,7 @@ import Card from './Card';
 function CarouselCards({ type }) {
   const { meals, drinks } = useContext(RecipesContext);
   const dataR = (type === 'meals' ? drinks : meals);
+  console.log(dataR);
   const TWO = 2;
   const FOUR = 4;
   const SIX = 6;
