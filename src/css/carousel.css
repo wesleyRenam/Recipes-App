@@ -1,13 +1,14 @@
 .carousel-item {
-  width: 50%;
   float: left;
+  width: 50%;
 }
-.carousel{
+
+.carousel {
   width: 100;
 }
 
 .carousel-inner {
-  width: 100%;
   overflow: hidden;
+  width: 100%;
 }
 
