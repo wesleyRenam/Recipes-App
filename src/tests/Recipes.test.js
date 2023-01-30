@@ -23,29 +23,29 @@ describe('test if recipes works correctly', () => {
   });
 
   it('should render all category meals correctly', () => {
-    renderWithRouter(
-      <Recipes
-        categorys={ mealCategories.meals }
-        isLoading={ false }
-        recipe={ meals.meals }
-      />,
-    );
+    const initialEntries = ['/meals'];
+    const { history } = renderWithRouter(<Recipes
+      categorys={ mealCategories.meals }
+      isLoading={ false }
+      recipe={ meals.meals }
+    />, { initialEntries });
 
     const categoryButtons = screen.getAllByRole('button');
+    expect(history.location.pathname).toBe('/meals');
     expect(categoryButtons.length).toBe(6);
   });
 
   it('should render all category drinks correctly', () => {
-    renderWithRouter(
-      <Recipes
-        categorys={ drinkCategories.drinks }
-        isLoading={ false }
-        recipe={ drinks.drinks }
-      />,
-    );
+    const initialEntries = ['/drinks'];
+    const { history } = renderWithRouter(<Recipes
+      categorys={ drinkCategories.drinks }
+      isLoading={ false }
+      recipe={ drinks.drinks }
+    />, { initialEntries });
 
     const categoryButtons = screen.getAllByRole('button');
     expect(categoryButtons.length).toBe(6);
+    expect(history.location.pathname).toBe('/drinks');
   });
 
   it('should all the meals recipes render correctly', () => {
@@ -81,6 +81,7 @@ describe('test if recipes works correctly', () => {
   });
 
   it('should click in the meal filterButton', async () => {
+    const initialEntries = ['/meals'];
     renderWithRouter(
       <RecipesProvider>
         <Recipes
@@ -89,16 +90,24 @@ describe('test if recipes works correctly', () => {
           recipe={ meals.meals }
         />
       </RecipesProvider>,
+      { initialEntries },
     );
 
     const filterButton = screen.getByRole('button', {
-      name: /chicken/i,
+      name: /beef/i,
     });
 
     userEvent.click(filterButton);
+
+    const filterRecipe = await screen.findAllByRole('img', {
+      name: /foto do produto/i,
+    });
+
+    expect(filterRecipe[0]).toHaveAttribute('src', 'https://www.themealdb.com/images/media/meals/sytuqu1511553755.jpg');
   });
 
   it('should click in the drinks filterButton', async () => {
+    const initialEntries = ['/drinks'];
     renderWithRouter(
       <RecipesProvider>
         <Recipes
@@ -107,6 +116,9 @@ describe('test if recipes works correctly', () => {
           recipe={ drinks.drinks }
         />
       </RecipesProvider>,
+      {
+        initialEntries,
+      },
     );
 
     const filterButton = screen.getByRole('button', {
@@ -114,6 +126,12 @@ describe('test if recipes works correctly', () => {
     });
 
     userEvent.click(filterButton);
+
+    const filterRecipe = await screen.findAllByRole('img', {
+      name: /foto do produto/i,
+    });
+
+    expect(filterRecipe[0]).toHaveAttribute('src', 'https://www.thecocktaildb.com/images/media/drink/rvwrvv1468877323.jpg');
   });
 
   it('should redirect to meals/:id page', async () => {
