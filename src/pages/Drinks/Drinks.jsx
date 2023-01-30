@@ -6,7 +6,7 @@ import Header from '../../components/Header/Header';
 
 function Drinks() {
   const { drinks, categoryDrinks, isLoading } = useContext(RecipesContext);
-
+  console.log(drinks);
   return (
     <div>
       <Header />

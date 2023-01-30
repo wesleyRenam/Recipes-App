@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
+import copy from 'clipboard-copy';
 import { useHistory } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 
@@ -16,8 +17,9 @@ function RecipesProvider({ children }) {
   const { makeFetch, isLoading } = useFetch();
   const [typeSearch, setTypeSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
+  const [favoritos, setFavoritos] = useState([]);
+  const [copyMsg, setCopyMsg] = useState('');
   const history = useHistory();
-
   useEffect(() => {
     const realizeFetch = async () => {
       const dataDrinks = await makeFetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
@@ -30,6 +32,7 @@ function RecipesProvider({ children }) {
       setCategoryMeals(categoryMealsData.meals);
     };
     realizeFetch();
+    setFavoritos(JSON.parse(localStorage.getItem('favoriteRecipes')) ?? []);
   }, []);
 
   const setFilterOnCategoryMeal = async (category) => {
@@ -40,6 +43,14 @@ function RecipesProvider({ children }) {
   const setFilterOnCategoryDrink = async (category) => {
     const dataDrinks = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${category}`);
     setFilterRecipes(dataDrinks.drinks);
+  };
+  const setMealDetails = async (id) => {
+    const detMeal = await makeFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+    return detMeal.meals;
+  };
+  const setDrinkDetails = async (id) => {
+    const detDrink = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
+    return detDrink.drinks;
   };
 
   const resetFilterOnCategory = () => {
@@ -57,7 +68,6 @@ function RecipesProvider({ children }) {
     if (array.length === 1) {
       switch (url) {
       case 'thecocktaildb':
-        console.log(array);
         history.push(`/drinks/${array[0].idDrink}`);
         break;
       case 'themealdb':
@@ -75,10 +85,67 @@ function RecipesProvider({ children }) {
     }
   };
 
+  const favoriteBtn = (type, recipeDetail) => {
+    let arrayFav = [];
+    arrayFav = JSON.parse(localStorage.getItem('favoriteRecipes')) ?? [];
+    if (type === 'drinks') {
+      arrayFav.push(
+        {
+          id: recipeDetail[0].idDrink,
+          type: 'drink',
+          nationality: (recipeDetail[0].strArea === null
+        || recipeDetail[0].strArea === undefined ? '' : recipeDetail[0].strArea),
+          category: recipeDetail[0].strCategory,
+          alcoholicOrNot: recipeDetail[0].strAlcoholic,
+          name: recipeDetail[0].strDrink,
+          image: recipeDetail[0].strDrinkThumb,
+        },
+      );
+      localStorage.setItem('favoriteRecipes', JSON.stringify(arrayFav));
+    } else {
+      arrayFav.push(
+        {
+          id: recipeDetail[0].idMeal,
+          type: 'meal',
+          nationality: (recipeDetail[0].strArea === null
+          || recipeDetail[0].strArea === undefined ? '' : recipeDetail[0].strArea),
+          category: recipeDetail[0].strCategory,
+          alcoholicOrNot: (recipeDetail[0].strAlcoholic === null
+          || recipeDetail[0].strAlcoholic === undefined ? '' : (
+              recipeDetail[0].strAlcoholic)),
+          name: recipeDetail[0].strMeal,
+          image: recipeDetail[0].strMealThumb,
+        },
+      );
+      localStorage.setItem('favoriteRecipes', JSON.stringify(arrayFav));
+    }
+    setFavoritos(JSON.parse(localStorage.getItem('favoriteRecipes')) ?? []);
+  };
+
+  const removeFavorite = (type, recipeDetail) => {
+    let arrayFav = [];
+    arrayFav = JSON.parse(localStorage.getItem('favoriteRecipes')) ?? [];
+    if (type === 'meals') {
+      localStorage.setItem('favoriteRecipes', JSON
+        .stringify(arrayFav.filter((each) => each.id !== recipeDetail[0].idMeal)));
+      setFavoritos(favoritos.filter((each) => each.id !== recipeDetail[0].idMeal));
+    } else {
+      localStorage.setItem('favoriteRecipes', JSON
+        .stringify(arrayFav.filter((each) => each.id !== recipeDetail[0].idDrink)));
+      setFavoritos(favoritos.filter((each) => each.id !== recipeDetail[0].idDrink));
+    }
+  };
+
   const showFilteredArray = (recipesArray) => {
     if (!recipesArray) return;
     setFilterRecipes(recipesArray);
     setIsFilter(!isFilter);
+  };
+
+  const handleClickCopy = (path) => {
+    const copiedUrl = `http://localhost:3000${path}`;
+    setCopyMsg('Link copied!');
+    copy(copiedUrl);
   };
 
   const onButtonSearchClickMeals = async (url) => {
@@ -143,6 +210,14 @@ function RecipesProvider({ children }) {
     onButtonSearchClickMeals,
     isFilter,
     setIsFilter,
+    setMealDetails,
+    setDrinkDetails,
+    copyMsg,
+    handleClickCopy,
+    favoritos,
+    setFavoritos,
+    favoriteBtn,
+    removeFavorite,
   }), [
     meals,
     drinks,
@@ -153,6 +228,11 @@ function RecipesProvider({ children }) {
     typeSearch,
     searchInput,
     isFilter,
+    setMealDetails,
+    setDrinkDetails,
+    copyMsg,
+    handleClickCopy,
+    favoritos,
   ]);
 
   return (
@@ -161,9 +241,7 @@ function RecipesProvider({ children }) {
     </RecipesContext.Provider>
   );
 }
-
 RecipesProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
-
 export default RecipesProvider;
