@@ -62,6 +62,30 @@ function RecipeInProgress() {
     setCopied('Link copied!');
   };
 
+  const verifyIsDone = () => {
+    const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (!getItems) return;
+
+    const items = [
+      ...recipes.map((recipe) => recipe.strIngredient1 || null),
+      ...recipes.map((recipe) => recipe.strIngredient2 || null),
+      ...recipes.map((recipe) => recipe.strIngredient3 || null),
+      ...recipes.map((recipe) => recipe.strIngredient4 || null),
+      ...recipes.map((recipe) => recipe.strIngredient5 || null),
+      ...recipes.map((recipe) => recipe.strIngredient6 || null),
+      ...recipes.map((recipe) => recipe.strIngredient7 || null),
+      ...recipes.map((recipe) => recipe.strIngredient8 || null),
+      ...recipes.map((recipe) => recipe.strIngredient9 || null),
+      ...recipes.map((recipe) => recipe.strIngredient10 || null),
+      ...recipes.map((recipe) => recipe.strIngredient11 || null),
+      ...recipes.map((recipe) => recipe.strIngredient12 || null)];
+    const verify = getItems[type][id] || [];
+    console.log(items);
+    const isDone = items.every((e) => e === verify.includes(e));
+    console.log(isDone);
+    return isDone;
+  };
+
   return (
     <div>
       <h1>RecipeInProgress</h1>
@@ -154,6 +178,7 @@ function RecipeInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
+            disabled={ !verifyIsDone() }
           >
             Finalizar
 
