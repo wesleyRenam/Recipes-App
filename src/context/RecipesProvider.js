@@ -17,8 +17,8 @@ function RecipesProvider({ children }) {
   const [typeSearch, setTypeSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [favoritos, setFavoritos] = useState([]);
-  const [detailMeal, setDetailMeal] = useState(['']);
-  const [detailDrink, setDetailDrink] = useState(['']);
+  const [detailMeal, setDetailMeal] = useState([]);
+  const [detailDrink, setDetailDrink] = useState([]);
   const history = useHistory();
 
   useEffect(() => {
@@ -212,6 +212,8 @@ function RecipesProvider({ children }) {
     removeFavorite,
     setMealDetails,
     setDrinkDetails,
+    detailDrink,
+    detailMeal,
   }), [
     meals,
     drinks,

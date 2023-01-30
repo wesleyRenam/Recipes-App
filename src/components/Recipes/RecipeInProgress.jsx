@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import copy from 'clipboard-copy';
 import useFetch from '../../hooks/useFetch';
 import Ingredient from './Ingredient';
@@ -13,17 +13,33 @@ function RecipeInProgress() {
   const [recipes, setRecipes] = useState([]);
   const { makeFetch, isLoading } = useFetch();
   const [copied, setCopied] = useState('');
+  const [isFav, setIsFav] = useState(null);
 
-  const { favoritos,
+  const {
+    favoritos,
     favoriteBtn,
     removeFavorite,
     setDrinkDetails,
     setMealDetails,
-    detailMeal } = useContext(RecipesContext);
+    detailMeal,
+    detailDrink } = useContext(RecipesContext);
 
   const id = history.location.pathname.split('/')[2];
   const type = history.location.pathname.split('/')[1];
-  const { pathname } = useLocation();
+
+  useEffect(() => {
+    if (type === 'drinks') {
+      setDrinkDetails(id);
+      const favorite = favoritos.some((fav) => fav[id] === detailDrink.idDrink);
+      setIsFav(favorite);
+      return;
+    }
+    if (type === 'meals') {
+      setMealDetails(id);
+      const favorite = favoritos.some((fav) => fav[id] === detailMeal.idMeal);
+      setIsFav(favorite);
+    }
+  }, [favoritos]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -39,20 +55,6 @@ function RecipeInProgress() {
   }, []);
 
   if (isLoading) return 'Carregando....';
-
-  let favorited;
-
-  if (pathname.split('/')[1] === 'drinks') {
-    favorited = !favoritos
-      .some((favorite) => favorite);
-    setDrinkDetails(id);
-  }
-
-  if (pathname.split('/')[1] === 'meals') {
-    favorited = !favoritos.some((favorite) => favorite
-      .id === detailMeal[0].idMeal);
-    setMealDetails(id);
-  }
 
   const handleClick = () => {
     const url = `http://localhost:3000/${type}/${id}`;
@@ -140,17 +142,22 @@ function RecipeInProgress() {
           </button>
           <button
             type="submit"
-            onClick={ () => (favorited ? favoriteBtn(pathname
-              .split('/')[1]) : removeFavorite(pathname.split('/')[1])) }
+            onClick={ () => (isFav ? removeFavorite(type)
+              : favoriteBtn(type)) }
           >
             <img
               data-testid="favorite-btn"
-              src={ favorited ? favWhiteIcon : favBlackIcon }
+              src={ isFav ? favBlackIcon : favWhiteIcon }
               alt="favoriteIcon"
             />
           </button>
-          {' '}
-          <button type="button" data-testid="finish-recipe-btn">Finalizar</button>
+          <button
+            type="button"
+            data-testid="finish-recipe-btn"
+          >
+            Finalizar
+
+          </button>
         </div>
       ))}
     </div>
