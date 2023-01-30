@@ -53,7 +53,7 @@ function RecipeDetails() {
           <h3 data-testid="recipe-category">
             {recipeDetail[0].strCategory}
             {recipeType === 'drinks' ? (
-              <span>
+              <span id="abc">
                 recipeDetail[0].strAlcoholic
               </span>
             ) : ''}
