@@ -3,9 +3,11 @@ import propTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import ProfileIcon from '../../images/profileIcon.svg';
 import SearchIcon from '../../images/searchIcon.svg';
+import SearchBar from '../SearchBar/SearchBar';
 
 function Header({ title, profileButton, searchButton }) {
   const [isSearch, setIsSearch] = useState(false);
+
   const history = useHistory();
 
   const profileRedirect = () => {
@@ -31,7 +33,7 @@ function Header({ title, profileButton, searchButton }) {
       <h1 data-testid="page-title">{title}</h1>
       {
         isSearch && (
-          <input type="text" data-testid="search-input" />
+          <SearchBar pathname={ history.location.pathname } />
         )
       }
     </header>
