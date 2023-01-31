@@ -10,8 +10,7 @@ function useFetch() {
       const data = await res.json();
       return data;
     } catch (error) {
-      console.log(error);
-      throw new Error('Ocorreu um erro, por favor tente novamente mais tarde.');
+      throw new Error(`Ocorreu um erro, por favor tente novamente mais tarde. ${error}`);
     } finally {
       setIsLoading(false);
     }

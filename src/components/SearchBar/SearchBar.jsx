@@ -6,7 +6,7 @@ import { useRecipes } from '../../context/RecipesProvider';
 function SearchBar({ pathname }) {
   const [filter, setFilter] = useState('');
   const [input, setInput] = useState('');
-  const { filterRecipes, filterBySearchBar } = useRecipes();
+  const { filterRecipes, setRecipes } = useRecipes();
 
   const history = useHistory();
 
@@ -36,7 +36,7 @@ function SearchBar({ pathname }) {
         .alert('Your search must have only 1 (one) character');
     }
 
-    filterBySearchBar(url, pathname.split('/')[1]);
+    setRecipes(url, pathname.split('/')[1]);
   };
 
   return (
