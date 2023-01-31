@@ -3,8 +3,8 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import Header from '../components/Header/Header';
-import renderWithRouter from '../helpers/renderWithRouter';
 import RecipesProvider from '../context/RecipesProvider';
+import { renderWithRouter } from './helpers/RenderWithRouter';
 
 describe('Testa o componente Header, e verifica: ', () => {
   test('Se o botão para o profile funciona corretamente', () => {
