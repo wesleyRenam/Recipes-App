@@ -1,4 +1,5 @@
 import React from 'react';
+import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import { useRecipes } from '../../context/RecipesProvider';
@@ -21,6 +22,7 @@ function Meals() {
           />
         )).slice(0, MAX_LENGTH)
       }
+      <Footer />
     </div>
   );
 }
