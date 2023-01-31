@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { RecipesContext } from '../../context/RecipesProvider';
 
 const initialEntry = {
   drinks: {
@@ -15,6 +16,8 @@ function Ingredient(props) {
   const { id, index, element } = props;
   const [isCheck, setIsCheck] = useState(false);
   const history = useHistory();
+
+  const { setIsDoneAll } = useContext(RecipesContext);
 
   const type = history.location.pathname.split('/')[1];
   const numberId = history.location.pathname.split('/')[2];
@@ -41,12 +44,24 @@ function Ingredient(props) {
     createAndUpdateItem(getItems);
   }, []);
 
-  const handleChange = () => {
+  const handleChange = ({ target }) => {
     const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
     const newItem = getItems;
     newItem[type][numberId].push(element);
     localStorage.setItem('inProgressRecipes', JSON.stringify(newItem));
     setIsCheck(true);
+    const arrayOfLabels = [...target.parentNode.parentNode.children];
+    const arrayOfLabelsChildren = [];
+    arrayOfLabels.forEach((label) => {
+      arrayOfLabelsChildren.push(label.children);
+    });
+    const arrayOfLabelsChildren2 = [...arrayOfLabelsChildren];
+    const arrayOfCheckboxes = [];
+    arrayOfLabelsChildren2.forEach((checkbox) => {
+      arrayOfCheckboxes.push(checkbox[0]);
+    });
+    const isDone = arrayOfCheckboxes.every((checkbox) => checkbox.checked);
+    if (isDone) setIsDoneAll(false);
   };
 
   return (

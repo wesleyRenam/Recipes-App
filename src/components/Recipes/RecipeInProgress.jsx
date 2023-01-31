@@ -22,7 +22,8 @@ function RecipeInProgress() {
     setDrinkDetails,
     setMealDetails,
     detailMeal,
-    detailDrink } = useContext(RecipesContext);
+    detailDrink,
+    isDoneAll } = useContext(RecipesContext);
 
   const id = history.location.pathname.split('/')[2];
   const type = history.location.pathname.split('/')[1];
@@ -62,28 +63,26 @@ function RecipeInProgress() {
     setCopied('Link copied!');
   };
 
-  const verifyIsDone = () => {
-    const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
-    if (!getItems) return;
-
-    const items = [
-      ...recipes.map((recipe) => recipe.strIngredient1 || null),
-      ...recipes.map((recipe) => recipe.strIngredient2 || null),
-      ...recipes.map((recipe) => recipe.strIngredient3 || null),
-      ...recipes.map((recipe) => recipe.strIngredient4 || null),
-      ...recipes.map((recipe) => recipe.strIngredient5 || null),
-      ...recipes.map((recipe) => recipe.strIngredient6 || null),
-      ...recipes.map((recipe) => recipe.strIngredient7 || null),
-      ...recipes.map((recipe) => recipe.strIngredient8 || null),
-      ...recipes.map((recipe) => recipe.strIngredient9 || null),
-      ...recipes.map((recipe) => recipe.strIngredient10 || null),
-      ...recipes.map((recipe) => recipe.strIngredient11 || null),
-      ...recipes.map((recipe) => recipe.strIngredient12 || null)];
-    const verify = getItems[type][id] || [];
-    console.log(items);
-    const isDone = items.every((e) => e === verify.includes(e));
-    console.log(isDone);
-    return isDone;
+  const onFinishRecipeButtonClick = () => {
+    const recipeObject = {
+      alcoholicOrNot: recipes[0].strAlcoholic || '',
+      category: recipes[0].strCategory,
+      doneDate: new Date().toISOString(),
+      id: type === 'meals' ? recipes[0].idMeal : recipes[0].idDrink,
+      image: type === 'meals' ? recipes[0].strMealThumb : recipes[0].strDrinkThumb,
+      name: type === 'meals' ? recipes[0].strMeal : recipes[0].strDrink,
+      nationality: recipes[0].strArea || '',
+      tags: recipes[0].strTags ? recipes[0].strTags.split(',') : [],
+      type: type === 'meals' ? 'meal' : 'drink',
+    };
+    if (JSON.parse(localStorage.getItem('doneRecipes'))) {
+      const doneRecipesArray = JSON.parse(localStorage.getItem('doneRecipes'));
+      const newDoneRecipesArray = [...doneRecipesArray, recipeObject];
+      localStorage.setItem('doneRecipes', JSON.stringify(newDoneRecipesArray));
+    } else {
+      localStorage.setItem('doneRecipes', JSON.stringify([recipeObject]));
+    }
+    history.push('/done-recipes');
   };
 
   return (
@@ -109,52 +108,53 @@ function RecipeInProgress() {
 
             {recipe.strInstructions}
           </p>
-          { recipe.strIngredient1 ? <Ingredient
-            id={ recipe.strIngredient1 }
-            index={ 0 }
-            element={ recipe.strIngredient1 }
-          /> : ''}
-          { recipe.strIngredient2 ? <Ingredient
-            id={ recipe.strIngredient2 }
-            index={ 1 }
-            element={ recipe.strIngredient2 }
-
-          /> : ''}
-          { recipe.strIngredient3 ? <Ingredient
-            id={ recipe.strIngredient3 }
-            index={ 2 }
-            element={ recipe.strIngredient3 }
-          /> : ''}
-          { recipe.strIngredient4 ? <Ingredient
-            id={ recipe.strIngredient4 }
-            index={ 3 }
-            element={ recipe.strIngredient4 }
-          /> : ''}
-          { recipe.strIngredient5 ? <Ingredient
-            id={ recipe.strIngredient5 }
-            index={ 4 }
-            element={ recipe.strIngredient5 }
-          /> : ''}
-          { recipe.strIngredient6 ? <Ingredient
-            id={ recipe.strIngredient6 }
-            index={ 7 }
-            element={ recipe.strIngredient6 }
-          /> : ''}
-          { recipe.strIngredient7 ? <Ingredient
-            id={ recipe.strIngredient7 }
-            index={ 8 }
-            element={ recipe.strIngredient7 }
-          /> : ''}
-          { recipe.strIngredient8 ? <Ingredient
-            id={ recipe.strIngredient8 }
-            index={ 9 }
-            element={ recipe.strIngredient8 }
-          /> : ''}
-          { recipe.strIngredient9 ? <Ingredient
-            id={ recipe.strIngredient9 }
-            index={ 10 }
-            element={ recipe.strIngredient9 }
-          /> : ''}
+          <div>
+            { recipe.strIngredient1 ? <Ingredient
+              id={ recipe.strIngredient1 }
+              index={ 0 }
+              element={ recipe.strIngredient1 }
+            /> : ''}
+            { recipe.strIngredient2 ? <Ingredient
+              id={ recipe.strIngredient2 }
+              index={ 1 }
+              element={ recipe.strIngredient2 }
+            /> : ''}
+            { recipe.strIngredient3 ? <Ingredient
+              id={ recipe.strIngredient3 }
+              index={ 2 }
+              element={ recipe.strIngredient3 }
+            /> : ''}
+            { recipe.strIngredient4 ? <Ingredient
+              id={ recipe.strIngredient4 }
+              index={ 3 }
+              element={ recipe.strIngredient4 }
+            /> : ''}
+            { recipe.strIngredient5 ? <Ingredient
+              id={ recipe.strIngredient5 }
+              index={ 4 }
+              element={ recipe.strIngredient5 }
+            /> : ''}
+            { recipe.strIngredient6 ? <Ingredient
+              id={ recipe.strIngredient6 }
+              index={ 7 }
+              element={ recipe.strIngredient6 }
+            /> : ''}
+            { recipe.strIngredient7 ? <Ingredient
+              id={ recipe.strIngredient7 }
+              index={ 8 }
+              element={ recipe.strIngredient7 }
+            /> : ''}
+            { recipe.strIngredient8 ? <Ingredient
+              id={ recipe.strIngredient8 }
+              index={ 9 }
+              element={ recipe.strIngredient8 }
+            /> : ''}
+            { recipe.strIngredient9 ? <Ingredient
+              id={ recipe.strIngredient9 }
+              index={ 10 }
+              element={ recipe.strIngredient9 }
+            /> : ''}
+          </div>
 
           <button
             type="button"
@@ -178,10 +178,10 @@ function RecipeInProgress() {
           <button
             type="button"
             data-testid="finish-recipe-btn"
-            disabled={ !verifyIsDone() }
+            disabled={ isDoneAll }
+            onClick={ onFinishRecipeButtonClick }
           >
             Finalizar
-
           </button>
         </div>
       ))}

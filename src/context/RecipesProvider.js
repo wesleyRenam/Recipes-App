@@ -20,6 +20,7 @@ function RecipesProvider({ children }) {
   const [detailMeal, setDetailMeal] = useState([]);
   const [detailDrink, setDetailDrink] = useState([]);
   const history = useHistory();
+  const [isDoneAll, setIsDoneAll] = useState(true);
 
   useEffect(() => {
     const realizeFetch = async () => {
@@ -214,6 +215,8 @@ function RecipesProvider({ children }) {
     setDrinkDetails,
     detailDrink,
     detailMeal,
+    isDoneAll,
+    setIsDoneAll,
   }), [
     meals,
     drinks,
@@ -225,6 +228,7 @@ function RecipesProvider({ children }) {
     searchInput,
     isFilter,
     favoritos,
+    isDoneAll,
   ]);
 
   return (
