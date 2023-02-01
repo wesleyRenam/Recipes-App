@@ -8,16 +8,21 @@ export const RecipesContext = createContext();
 function RecipesProvider({ children }) {
   const [filterRecipes, setFilterRecipes] = useState([]);
   const [category, setCategory] = useState([]);
+  const [recipe, setRecipe] = useState({});
+  const [ingredients, setIngredients] = useState({
+    ingredients: [],
+    measures: [],
+  });
   const { makeFetch, isLoading, Error } = useFetch();
-
-  const filterBySearchBar = async (url, type) => {
-    const data = await makeFetch(url);
-    setFilterRecipes(data[type]);
-  };
 
   const setRecipes = async (url, type) => {
     const data = await makeFetch(url);
     setFilterRecipes(data[type]);
+  };
+
+  const setRecipeDetail = async (url, type) => {
+    const data = await makeFetch(url);
+    setRecipe(...data[type]);
   };
 
   const setCategoryOnState = async (url, type) => {
@@ -27,13 +32,16 @@ function RecipesProvider({ children }) {
 
   const values = useMemo(() => ({
     filterRecipes,
-    filterBySearchBar,
     isLoading,
     Error,
     setRecipes,
     category,
     setCategoryOnState,
-  }), [filterRecipes, isLoading, Error, category]);
+    recipe,
+    setRecipeDetail,
+    ingredients,
+    setIngredients,
+  }), [filterRecipes, isLoading, Error, category, recipe, ingredients]);
 
   return (
     <RecipesContext.Provider value={ values }>

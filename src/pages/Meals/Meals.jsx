@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import CategoryBtn from '../../components/CategoryBtn/CategoryBtn';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
-import RecipeCard from '../../components/Recipes/Recipes';
+import Recipes from '../../components/Recipes/Recipes';
 import { useRecipes } from '../../context/RecipesProvider';
 
 const MAX_LENGTH = 12;
@@ -37,7 +37,7 @@ function Meals() {
       </div>
       {
         filterRecipes && filterRecipes.map((recipe, index) => (
-          <RecipeCard
+          <Recipes
             key={ index }
             index={ index }
             img={ recipe.strMealThumb }
