@@ -52,7 +52,11 @@ function RecipeDetails() {
           </h1>
           <h3 data-testid="recipe-category">
             {recipeDetail[0].strCategory}
-            {recipeType === 'drinks' ? recipeDetail[0].strAlcoholic : ''}
+            {recipeType === 'drinks' ? (
+              <span id="abc">
+                recipeDetail[0].strAlcoholic
+              </span>
+            ) : ''}
           </h3>
           <img src={ recipeDetail[0].strMealThumb } alt="" data-testid="recipe-photo" />
           <p data-testid="instructions">
