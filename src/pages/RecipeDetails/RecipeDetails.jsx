@@ -14,12 +14,17 @@ import shareIcon from '../../images/shareIcon.svg';
 function RecipeDetails() {
   const [isFav, setIsFav] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
-  const { recipe,
-    setRecipeDetail, ingredients, setIngredients, setRecipes } = useRecipes();
+  const {
+    recipe,
+    setRecipeDetail,
+    ingredients,
+    setIngredients,
+    setRecipes,
+  } = useRecipes();
   const history = useHistory();
   const id = history.location.pathname.split('/')[2];
   const type = history.location.pathname.split('/')[1];
-  const { isFavorite, inProgress } = useGetLocalStorage(type, id, recipe);
+  const { isFavorite, inProgress } = useGetLocalStorage(type, id);
   const { startRecipe, setFavorite, removeFavorite } = useSetLocalStorage(type, id);
 
   useEffect(() => {
