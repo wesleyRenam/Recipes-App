@@ -18,6 +18,9 @@ function RecipesProvider({ children }) {
   const [typeSearch, setTypeSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [favoritos, setFavoritos] = useState([]);
+  const [detailMeal, setDetailMeal] = useState([]);
+  const [detailDrink, setDetailDrink] = useState([]);
+  const [isDoneAll, setIsDoneAll] = useState(true);
   const [copyMsg, setCopyMsg] = useState('');
   const history = useHistory();
   useEffect(() => {
@@ -45,12 +48,12 @@ function RecipesProvider({ children }) {
     setFilterRecipes(dataDrinks.drinks);
   };
   const setMealDetails = async (id) => {
-    const detMeal = await makeFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-    return detMeal.meals;
+    const setMeal = await makeFetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+    setDetailMeal(setMeal.meals);
   };
   const setDrinkDetails = async (id) => {
-    const detDrink = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
-    return detDrink.drinks;
+    const setDrink = await makeFetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
+    setDetailDrink(setDrink.drinks);
   };
 
   const resetFilterOnCategory = () => {
@@ -135,19 +138,16 @@ function RecipesProvider({ children }) {
       setFavoritos(favoritos.filter((each) => each.id !== recipeDetail[0].idDrink));
     }
   };
-
   const showFilteredArray = (recipesArray) => {
     if (!recipesArray) return;
     setFilterRecipes(recipesArray);
     setIsFilter(!isFilter);
   };
-
   const handleClickCopy = (path) => {
     const copiedUrl = `http://localhost:3000${path}`;
     setCopyMsg('Link copied!');
     copy(copiedUrl);
   };
-
   const onButtonSearchClickMeals = async (url) => {
     let dataSearch;
     switch (typeSearch) {
@@ -192,7 +192,6 @@ function RecipesProvider({ children }) {
       break;
     }
   };
-
   const values = useMemo(() => ({
     meals,
     drinks,
@@ -210,14 +209,18 @@ function RecipesProvider({ children }) {
     onButtonSearchClickMeals,
     isFilter,
     setIsFilter,
-    setMealDetails,
-    setDrinkDetails,
     copyMsg,
     handleClickCopy,
     favoritos,
     setFavoritos,
     favoriteBtn,
     removeFavorite,
+    setMealDetails,
+    setDrinkDetails,
+    detailDrink,
+    detailMeal,
+    isDoneAll,
+    setIsDoneAll,
   }), [
     meals,
     drinks,
@@ -228,13 +231,13 @@ function RecipesProvider({ children }) {
     typeSearch,
     searchInput,
     isFilter,
+    favoritos,
+    isDoneAll,
     setMealDetails,
     setDrinkDetails,
     copyMsg,
     handleClickCopy,
-    favoritos,
   ]);
-
   return (
     <RecipesContext.Provider value={ values }>
       {children}
