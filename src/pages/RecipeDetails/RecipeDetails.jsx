@@ -2,15 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import copy from 'clipboard-copy';
+import { MdFavorite, MdFavoriteBorder, MdShare } from 'react-icons/md';
 import Carousel from '../../components/Carousel/Carousel';
 import RecipeCard from '../../components/RecipeCard/RecipeCard';
 import { useRecipes } from '../../context/RecipesProvider';
 import useGetLocalStorage from '../../hooks/useGetLocalStorage';
 import useSetLocalStorage from '../../hooks/useSetLocalStorage';
-import blackHeartIcon from '../../images/blackHeartIcon.svg';
-import whiteHeartIcon from '../../images/whiteHeartIcon.svg';
-import shareIcon from '../../images/shareIcon.svg';
 import Button from '../../components/Button/Button';
+import * as S from './styles';
 
 function RecipeDetails() {
   const [isFav, setIsFav] = useState(false);
@@ -83,18 +82,27 @@ function RecipeDetails() {
 
   return (
     <div>
-      <Button
-        handleClick={ isFav ? removeFav : handleFavorite }
-        src={ isFav ? blackHeartIcon : whiteHeartIcon }
-        alt="botão de favoritar"
-        id="favorite-btn"
-      />
-      <Button
-        handleClick={ handleShare }
-        src={ shareIcon }
-        alt="botão de compartilhar"
-        id="share-btn"
-      />
+      <S.ButtonsContainer>
+        <Button
+          handleClick={ isFav ? removeFav : handleFavorite }
+          alt="botão de favoritar"
+          id="favorite-btn"
+          size="30px"
+          color="secondary"
+        >
+          { isFav
+            ? <MdFavorite /> : <MdFavoriteBorder />}
+        </Button>
+        <Button
+          handleClick={ handleShare }
+          alt="botão de compartilhar"
+          id="share-btn"
+          size="30px"
+          color="secondary"
+        >
+          <MdShare />
+        </Button>
+      </S.ButtonsContainer>
       <RecipeCard
         ingredients={ ingredients.ingredients }
         measures={ ingredients.measures }
@@ -105,19 +113,21 @@ function RecipeDetails() {
         categoryOrAlcoholic={ recipe.strAlcoholic || recipe.strCategory }
         video={ type === 'meals' ? recipe.strYoutube : null }
       />
-      {isCopy && (
-        <div>
-          <span>Link copied!</span>
-        </div>
-      )}
-      <Carousel />
-      <button
-        style={ { position: 'fixed', bottom: 0 } }
-        data-testid="start-recipe-btn"
-        onClick={ inProgress ? handleContinue : handleClick }
-      >
-        {inProgress ? 'Continue Recipe' : 'Start Recipe'}
-      </button>
+      <S.ButtonContainer>
+        {isCopy && (
+          <div>
+            <span>Link copied!</span>
+          </div>
+        )}
+        <h2>Recommended</h2>
+        <Carousel />
+        <button
+          data-testid="start-recipe-btn"
+          onClick={ inProgress ? handleContinue : handleClick }
+        >
+          {inProgress ? 'Continue Recipe' : 'Start Recipe'}
+        </button>
+      </S.ButtonContainer>
     </div>
   );
 }

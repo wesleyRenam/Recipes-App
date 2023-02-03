@@ -6,8 +6,8 @@ function RecommendationCard({ image, title, index }) {
     <div
       data-testid={ `${index}-recommendation-card` }
     >
+      <img src={ image } alt="receita recomendada" />
       <h4 data-testid={ `${index}-recommendation-title` }>{title}</h4>
-      <img src={ image } alt="receita recomendada" width={ 150 } height={ 100 } />
     </div>
   );
 }

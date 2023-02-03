@@ -1,23 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import CustomButton from './style';
 
-function Button({ handleClick, src, alt, id }) {
+function Button({ handleClick, children, alt, id, color, size }) {
   return (
-    <button onClick={ handleClick }>
-      <img
-        src={ src }
-        alt={ alt }
-        data-testid={ id }
-      />
-    </button>
+    <CustomButton
+      onClick={ handleClick }
+      alt={ alt }
+      data-testid={ id }
+      color={ color }
+      size={ size }
+    >
+      {children}
+    </CustomButton>
   );
 }
 
 Button.propTypes = {
   handleClick: PropTypes.func.isRequired,
-  src: PropTypes.string.isRequired,
+  children: PropTypes.node.isRequired,
   alt: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  size: PropTypes.string.isRequired,
 };
 
 export default Button;

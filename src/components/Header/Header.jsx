@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import propTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import ProfileIcon from '../../images/profileIcon.svg';
-import SearchIcon from '../../images/searchIcon.svg';
+import { CgProfile } from 'react-icons/cg';
+import { BiSearchAlt } from 'react-icons/bi';
 import SearchBar from '../SearchBar/SearchBar';
+import * as S from './style';
+import Button from '../Button/Button';
 
 function Header({ title, profileButton, searchButton }) {
   const [isSearch, setIsSearch] = useState(false);
@@ -19,32 +21,38 @@ function Header({ title, profileButton, searchButton }) {
   };
 
   return (
-    <header>
-      { profileButton && (
-        <button onClick={ profileRedirect }>
-          <img
-            src={ ProfileIcon }
-            data-testid="profile-top-btn"
-            alt="Icone de perfil"
-          />
-        </button>
-      )}
-      { searchButton && (
-        <button onClick={ handleToggle }>
-          <img
-            src={ SearchIcon }
-            data-testid="search-top-btn"
+    <S.HeaderContainer isSearch={ isSearch }>
+      <S.ButtonsContainer>
+        { searchButton && (
+          <Button
+            handleClick={ handleToggle }
+            id="search-top-btn"
             alt="Icone de Pesquisa"
-          />
-        </button>
-      )}
+            color="primary"
+            size="35px"
+          >
+            <BiSearchAlt />
+          </Button>
+        )}
+        { profileButton && (
+          <Button
+            handleClick={ profileRedirect }
+            id="profile-top-btn"
+            alt="Icone de perfil"
+            color="primary"
+            size="35px"
+          >
+            <CgProfile />
+          </Button>
+        )}
+      </S.ButtonsContainer>
       <h1 data-testid="page-title">{title}</h1>
       {
         isSearch && (
           <SearchBar pathname={ history.location.pathname } />
         )
       }
-    </header>
+    </S.HeaderContainer>
   );
 }
 

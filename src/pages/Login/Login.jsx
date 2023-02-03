@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import * as S from './style';
+import bgImage from '../../images/backgroundImage.png';
 
 function Login() {
   const [user, setUser] = useState({
@@ -24,22 +26,23 @@ function Login() {
   };
 
   return (
-    <form onSubmit={ handleSubmit }>
-      <input
+    <S.LoginContainer onSubmit={ handleSubmit }>
+      <img src={ bgImage } alt="background login" />
+      <S.Input
         type="email"
         data-testid="email-input"
         placeholder="Digite seu email"
         name="email"
         onChange={ ({ target: { name, value } }) => handleChange(name, value) }
       />
-      <input
+      <S.Input
         type="password"
         data-testid="password-input"
         placeholder="Digite sua senha"
         name="password"
         onChange={ ({ target: { name, value } }) => handleChange(name, value) }
       />
-      <button
+      <S.Button
         data-testid="login-submit-btn"
         disabled={ !validEmail.test(user.email)
           || user.password.length <= VALID_PASSWORD }
@@ -47,8 +50,8 @@ function Login() {
       >
         Enter
 
-      </button>
-    </form>
+      </S.Button>
+    </S.LoginContainer>
   );
 }
 

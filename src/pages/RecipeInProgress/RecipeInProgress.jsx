@@ -2,14 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import copy from 'clipboard-copy';
+import { MdFavorite, MdFavoriteBorder, MdShare } from 'react-icons/md';
 import Button from '../../components/Button/Button';
 import RecipeProgressCard from '../../components/RecipeProgressCard/RecipeProgressCard';
 import { useRecipes } from '../../context/RecipesProvider';
 import useSetLocalStorage from '../../hooks/useSetLocalStorage';
-import blackHeartIcon from '../../images/blackHeartIcon.svg';
-import whiteHeartIcon from '../../images/whiteHeartIcon.svg';
-import shareIcon from '../../images/shareIcon.svg';
 import useGetLocalStorage from '../../hooks/useGetLocalStorage';
+import * as S from './style';
 
 function RecipeInProgress() {
   const [isFav, setIsFav] = useState(false);
@@ -76,18 +75,27 @@ function RecipeInProgress() {
 
   return (
     <div>
-      <Button
-        handleClick={ isFav ? removeFav : handleFavorite }
-        src={ isFav ? blackHeartIcon : whiteHeartIcon }
-        alt="botão de favoritar"
-        id="favorite-btn"
-      />
-      <Button
-        handleClick={ handleShare }
-        src={ shareIcon }
-        alt="botão de compartilhar"
-        id="share-btn"
-      />
+      <S.ButtonsContainer>
+        <Button
+          handleClick={ isFav ? removeFav : handleFavorite }
+          alt="botão de favoritar"
+          id="favorite-btn"
+          size="30px"
+          color="secondary"
+        >
+          { isFav
+            ? <MdFavorite /> : <MdFavoriteBorder />}
+        </Button>
+        <Button
+          handleClick={ handleShare }
+          alt="botão de compartilhar"
+          id="share-btn"
+          size="30px"
+          color="secondary"
+        >
+          <MdShare />
+        </Button>
+      </S.ButtonsContainer>
 
       <RecipeProgressCard
         ingredients={ ingredients.ingredients }
@@ -99,18 +107,20 @@ function RecipeInProgress() {
         categoryOrAlcoholic={ recipe.strAlcoholic || recipe.strCategory }
         verifyIsFinish={ verifyIsFinish }
       />
-      {isCopy && (
-        <div>
-          <span>Link copied!</span>
-        </div>
-      )}
-      <button
-        data-testid="finish-recipe-btn"
-        onClick={ () => finishRecipe() }
-        disabled={ !isDone }
-      >
-        Done Recipe
-      </button>
+      <S.ButtonContainer>
+        {isCopy && (
+          <div>
+            <span>Link copied!</span>
+          </div>
+        )}
+        <button
+          data-testid="finish-recipe-btn"
+          onClick={ () => finishRecipe() }
+          disabled={ !isDone }
+        >
+          Done Recipe
+        </button>
+      </S.ButtonContainer>
     </div>
   );
 }

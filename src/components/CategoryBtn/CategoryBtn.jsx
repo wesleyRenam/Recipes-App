@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useRecipes } from '../../context/RecipesProvider';
+import { CategoryButton, CategoryButtonContainer } from './style';
 
-function CategoryBtn({ category, type }) {
+function CategoryBtn({ category, type, icon }) {
   const [isActive, setIsActive] = useState(false);
   const { setRecipes } = useRecipes();
 
@@ -18,15 +19,22 @@ function CategoryBtn({ category, type }) {
   };
 
   return (
-    <button data-testid={ `${category}-category-filter` } onClick={ handleClick }>
-      {category}
-    </button>
+    <CategoryButtonContainer>
+      <CategoryButton
+        data-testid={ `${category}-category-filter` }
+        onClick={ handleClick }
+      >
+        {icon}
+      </CategoryButton>
+      <span>{category}</span>
+    </CategoryButtonContainer>
   );
 }
 
 CategoryBtn.propTypes = {
   category: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  icon: PropTypes.node.isRequired,
 };
 
 export default CategoryBtn;

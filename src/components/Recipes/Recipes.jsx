@@ -1,21 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import * as S from './styles';
 
 function Recipes({ index, name, img, id, type }) {
   return (
-    <div data-testid={ `${index}-recipe-card` }>
+    <S.RecipeCardContainer data-testid={ `${index}-recipe-card` }>
       <Link to={ type === 'drinks' ? `/drinks/${id}` : `/meals/${id}` }>
-        <h2 data-testid={ `${index}-card-name` }>{name}</h2>
         <img
           src={ img }
           data-testid={ `${index}-card-img` }
           alt="imagem da receita"
-          width={ 250 }
-          height={ 200 }
         />
+        <h2 data-testid={ `${index}-card-name` }>{name}</h2>
       </Link>
-    </div>
+    </S.RecipeCardContainer>
   );
 }
 

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import useGetLocalStorage from '../../hooks/useGetLocalStorage';
+import * as S from './style';
 
 function RecipeProgressCard({
   image, title, categoryOrAlcoholic,
@@ -36,17 +37,15 @@ function RecipeProgressCard({
   };
 
   return (
-    <div>
-      <h1 data-testid="recipe-title">{title}</h1>
+    <S.RecipeCardContainer>
       <img
         src={ image }
         alt="imagem da receita"
         data-testid="recipe-photo"
-        width={ 250 }
-        height={ 200 }
       />
+      <h1 data-testid="recipe-title">{title}</h1>
       <p data-testid="recipe-category">{categoryOrAlcoholic}</p>
-      <div>
+      <S.IngredientsContainer>
         {ingredients.map((ingredient, index) => (
           <label
             key={ index }
@@ -69,9 +68,9 @@ function RecipeProgressCard({
             }
           </label>
         ))}
-      </div>
+      </S.IngredientsContainer>
       <p data-testid="instructions">{instructions}</p>
-    </div>
+    </S.RecipeCardContainer>
   );
 }
 
