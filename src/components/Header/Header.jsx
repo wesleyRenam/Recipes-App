@@ -22,12 +22,20 @@ function Header({ title, profileButton, searchButton }) {
     <header>
       { profileButton && (
         <button onClick={ profileRedirect }>
-          <img src={ ProfileIcon } alt="Icone de perfil" data-testid="profile-top-btn" />
+          <img
+            src={ ProfileIcon }
+            data-testid="profile-top-btn"
+            alt="Icone de perfil"
+          />
         </button>
       )}
       { searchButton && (
         <button onClick={ handleToggle }>
-          <img src={ SearchIcon } alt="Icone de Pesquisa" data-testid="search-top-btn" />
+          <img
+            src={ SearchIcon }
+            data-testid="search-top-btn"
+            alt="Icone de Pesquisa"
+          />
         </button>
       )}
       <h1 data-testid="page-title">{title}</h1>

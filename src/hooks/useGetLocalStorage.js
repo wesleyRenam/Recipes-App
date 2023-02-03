@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from 'react';
 
 function useGetLocalStorage(type, id) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [inProgress, setInProgress] = useState(false);
+  const [ingredientsChecked, setIngredientsChecked] = useState([]);
 
   useEffect(() => {
     if (!localStorage.getItem('inProgressRecipes')) {
@@ -23,6 +25,16 @@ function useGetLocalStorage(type, id) {
   }, [id, type]);
 
   useEffect(() => {
+    const getItems = JSON.parse(localStorage.getItem('inProgressRecipes'));
+    if (getItems[type][id] === undefined) {
+      getItems[type][`${id}`] = [];
+      localStorage.setItem('inProgressRecipes', JSON.stringify(getItems));
+      return;
+    }
+    setIngredientsChecked(getItems[type][id]);
+  }, [id, type]);
+
+  useEffect(() => {
     if (localStorage.getItem('favoriteRecipes')) {
       const favoriteRecipes = JSON.parse(localStorage.getItem('favoriteRecipes'));
       if (type === 'meals') {
@@ -40,7 +52,7 @@ function useGetLocalStorage(type, id) {
   }, [id, type]);
 
   return {
-    isFavorite, inProgress, setInProgress, setIsFavorite,
+    isFavorite, inProgress, setInProgress, setIsFavorite, ingredientsChecked,
   };
 }
 

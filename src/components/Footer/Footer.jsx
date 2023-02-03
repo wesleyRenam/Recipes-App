@@ -5,7 +5,13 @@ import mealIcon from '../../images/mealIcon.svg';
 
 function Footer() {
   return (
-    <div data-testid="footer" style={ { position: 'fixed', bottom: 0 } }>
+    <div
+      data-testid="footer"
+      style={ {
+        position: 'fixed',
+        bottom: 0,
+      } }
+    >
       <Link to="/drinks">
         <img src={ drinkIcon } alt="icone de bebida" data-testid="drinks-bottom-btn" />
       </Link>

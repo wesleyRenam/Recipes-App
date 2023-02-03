@@ -90,7 +90,9 @@ describe('category button', () => {
       { initialEntries },
     );
 
-    const categoryBtn = await screen.findByTestId('Ordinary Drink-category-filter');
+    const categoryBtn = await screen.findByRole('button', {
+      name: /shake/i,
+    });
 
     act(() => {
       userEvent.click(categoryBtn);

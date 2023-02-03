@@ -4,7 +4,7 @@ import useGetLocalStorage from './useGetLocalStorage';
 
 function useSetLocalStorage(type, id) {
   const { setInProgress, setIsFavorite } = useGetLocalStorage(type, id);
-  const { recipe, ingredients } = useRecipes();
+  const { recipe } = useRecipes();
 
   const history = useHistory();
 
@@ -16,7 +16,7 @@ function useSetLocalStorage(type, id) {
         ...inProgressRecipe,
         meals: {
           ...inProgressRecipe.meals,
-          [idMeal]: ingredients.ingredients,
+          [idMeal]: [],
         },
       };
       localStorage.setItem('inProgressRecipes', JSON.stringify(newInProgressRecipes));
@@ -28,13 +28,35 @@ function useSetLocalStorage(type, id) {
         ...inProgressRecipe,
         drinks: {
           ...inProgressRecipe.drinks,
-          [idDrink]: ingredients.ingredients,
+          [idDrink]: [],
         },
       };
       localStorage.setItem('inProgressRecipes', JSON.stringify(newInProgressRecipes));
       setInProgress(true);
       history.push(`/drinks/${id}/in-progress`);
     }
+  };
+
+  const finishRecipe = () => {
+    const recipeData = {
+      alcoholicOrNot: recipe.strAlcoholic || '',
+      category: recipe.strCategory,
+      doneDate: new Date().toISOString(),
+      id: type === 'meals' ? recipe.idMeal : recipe.idDrink,
+      image: type === 'meals' ? recipe.strMealThumb : recipe.strDrinkThumb,
+      name: type === 'meals' ? recipe.strMeal : recipe.strDrink,
+      nationality: recipe.strArea || '',
+      tags: recipe.strTags ? recipe.strTags.split(',') : [],
+      type: type === 'meals' ? 'meal' : 'drink',
+    };
+    if (JSON.parse(localStorage.getItem('doneRecipes'))) {
+      const doneRecipesArray = JSON.parse(localStorage.getItem('doneRecipes'));
+      const newDoneRecipesArray = [...doneRecipesArray, recipeData];
+      localStorage.setItem('doneRecipes', JSON.stringify(newDoneRecipesArray));
+    } else {
+      localStorage.setItem('doneRecipes', JSON.stringify([recipeData]));
+    }
+    history.push('/done-recipes');
   };
 
   const setFavorite = () => {
@@ -85,7 +107,7 @@ function useSetLocalStorage(type, id) {
   };
 
   return {
-    startRecipe, setFavorite, removeFavorite,
+    startRecipe, setFavorite, removeFavorite, finishRecipe,
   };
 }
 

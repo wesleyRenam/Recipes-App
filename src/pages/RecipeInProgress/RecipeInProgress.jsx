@@ -2,44 +2,40 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import copy from 'clipboard-copy';
-import Carousel from '../../components/Carousel/Carousel';
-import RecipeCard from '../../components/RecipeCard/RecipeCard';
+import Button from '../../components/Button/Button';
+import RecipeProgressCard from '../../components/RecipeProgressCard/RecipeProgressCard';
 import { useRecipes } from '../../context/RecipesProvider';
-import useGetLocalStorage from '../../hooks/useGetLocalStorage';
 import useSetLocalStorage from '../../hooks/useSetLocalStorage';
 import blackHeartIcon from '../../images/blackHeartIcon.svg';
 import whiteHeartIcon from '../../images/whiteHeartIcon.svg';
 import shareIcon from '../../images/shareIcon.svg';
-import Button from '../../components/Button/Button';
+import useGetLocalStorage from '../../hooks/useGetLocalStorage';
 
-function RecipeDetails() {
+function RecipeInProgress() {
   const [isFav, setIsFav] = useState(false);
   const [isCopy, setIsCopy] = useState(false);
+  const [isDone, setIsDone] = useState(false);
 
   const {
     recipe,
     setRecipeDetail,
     ingredients,
     setIngredients,
-    setRecipes,
   } = useRecipes();
 
   const history = useHistory();
   const id = history.location.pathname.split('/')[2];
   const type = history.location.pathname.split('/')[1];
-
-  const { isFavorite, inProgress } = useGetLocalStorage(type, id);
-  const { startRecipe, setFavorite, removeFavorite } = useSetLocalStorage(type, id);
+  const { isFavorite } = useGetLocalStorage(type, id);
+  const { setFavorite, removeFavorite, finishRecipe } = useSetLocalStorage(type, id);
 
   useEffect(() => {
     if (type === 'drinks') {
       setRecipeDetail(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`, type);
-      setRecipes('https://www.themealdb.com/api/json/v1/1/search.php?s=', 'meals');
       return;
     }
     if (type === 'meals') {
       setRecipeDetail(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`, type);
-      setRecipes('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=', 'drinks');
     }
   }, []);
 
@@ -58,10 +54,6 @@ function RecipeDetails() {
     setIsFav(isFavorite);
   }, [isFavorite]);
 
-  const handleClick = () => {
-    startRecipe();
-  };
-
   const handleFavorite = () => {
     setFavorite();
     setIsFav(true);
@@ -73,12 +65,13 @@ function RecipeDetails() {
   };
 
   const handleShare = () => {
-    copy(`http://localhost:3000${history.location.pathname}`);
+    copy(`http://localhost:3000/${type}/${id}`);
     setIsCopy(!isCopy);
   };
 
-  const handleContinue = () => {
-    history.push(`/${type}/${id}/in-progress`);
+  const verifyIsFinish = (list) => {
+    const allChecked = list.every(Boolean);
+    setIsDone(allChecked);
   };
 
   return (
@@ -95,7 +88,8 @@ function RecipeDetails() {
         alt="botão de compartilhar"
         id="share-btn"
       />
-      <RecipeCard
+
+      <RecipeProgressCard
         ingredients={ ingredients.ingredients }
         measures={ ingredients.measures }
         key={ recipe.idDrink || recipe.idMeal }
@@ -103,23 +97,22 @@ function RecipeDetails() {
         instructions={ recipe.strInstructions }
         image={ recipe.strDrinkThumb || recipe.strMealThumb }
         categoryOrAlcoholic={ recipe.strAlcoholic || recipe.strCategory }
-        video={ type === 'meals' ? recipe.strYoutube : null }
+        verifyIsFinish={ verifyIsFinish }
       />
       {isCopy && (
         <div>
           <span>Link copied!</span>
         </div>
       )}
-      <Carousel />
       <button
-        style={ { position: 'fixed', bottom: 0 } }
-        data-testid="start-recipe-btn"
-        onClick={ inProgress ? handleContinue : handleClick }
+        data-testid="finish-recipe-btn"
+        onClick={ () => finishRecipe() }
+        disabled={ !isDone }
       >
-        {inProgress ? 'Continue Recipe' : 'Start Recipe'}
+        Done Recipe
       </button>
     </div>
   );
 }
 
-export default RecipeDetails;
+export default RecipeInProgress;
