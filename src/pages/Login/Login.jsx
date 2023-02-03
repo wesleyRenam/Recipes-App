@@ -1,18 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { LoginContext } from '../../context/LoginProvider';
 
 function Login() {
   const [user, setUser] = useState({
     email: '',
     password: '',
   });
-
-  const { setEmail } = useContext(LoginContext);
   const history = useHistory();
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const validEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  const VALID_PASSWORD = 6;
+
+  const handleChange = (name, value) => {
     setUser({
       ...user,
       [name]: value,
@@ -20,43 +19,36 @@ function Login() {
   };
 
   const handleSubmit = () => {
-    setEmail(user.email);
-    history.push('/meals');
     localStorage.setItem('user', JSON.stringify({ email: user.email }));
+    history.push('/meals');
   };
 
-  const regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
-  const MAX_NUMBER = 6;
-
   return (
-    <div>
-      <h1>Login</h1>
+    <form onSubmit={ handleSubmit }>
       <input
         type="email"
-        name="email"
         data-testid="email-input"
-        onChange={ handleChange }
         placeholder="Digite seu email"
+        name="email"
+        onChange={ ({ target: { name, value } }) => handleChange(name, value) }
       />
       <input
         type="password"
-        name="password"
         data-testid="password-input"
-        onChange={ handleChange }
-        placeholder="Digite seu senha"
+        placeholder="Digite sua senha"
+        name="password"
+        onChange={ ({ target: { name, value } }) => handleChange(name, value) }
       />
       <button
         data-testid="login-submit-btn"
-        disabled={ !regexEmail.test(user.email) || user.password.length <= MAX_NUMBER }
-        type="button"
+        disabled={ !validEmail.test(user.email)
+          || user.password.length <= VALID_PASSWORD }
         onClick={ handleSubmit }
       >
-        {' '}
         Enter
-        {' '}
 
       </button>
-    </div>
+    </form>
   );
 }
 

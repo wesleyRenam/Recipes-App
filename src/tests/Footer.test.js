@@ -1,27 +1,58 @@
-import { screen } from '@testing-library/react';
+import { act, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import App from '../App';
+import Footer from '../components/Footer/Footer';
 import RecipesProvider from '../context/RecipesProvider';
-import Meals from '../pages/Meals/Meals';
-import { renderWithRouter } from './helpers/RenderWithRouter';
+import { renderWithRouter } from './helpers/renderWithRouter';
 
-describe('test with footer works correctly', () => {
-  it('should be render on bottom page', () => {
-    const { history } = renderWithRouter(
+const mealButton = 'meals-bottom-btn';
+const drinkButton = 'drinks-bottom-btn';
+
+describe('footer component', () => {
+  it('should render correctly', () => {
+    renderWithRouter(
       <RecipesProvider>
-        <Meals />
+        <Footer />
       </RecipesProvider>,
     );
 
-    const drinkIcon = screen.getByRole('img', { name: /icone bebida/i });
-    const foodIcon = screen.getByRole('img', {
-      name: /icone comida/i,
+    expect(screen.getByTestId(mealButton)).toBeInTheDocument();
+    expect(screen.getByTestId(drinkButton)).toBeInTheDocument();
+  });
+
+  it('should redirect to meal page on click drink button', async () => {
+    const initialEntries = ['/drinks'];
+    const { history } = renderWithRouter(
+      <RecipesProvider>
+        <App />
+      </RecipesProvider>,
+      { initialEntries },
+    );
+
+    act(() => {
+      userEvent.click(screen.getByTestId(drinkButton));
     });
 
-    expect(drinkIcon).toBeInTheDocument();
-    expect(foodIcon).toBeInTheDocument();
+    await waitFor(() => {
+      expect(history.location.pathname).toBe('/drinks');
+    });
+  });
 
-    userEvent.click(drinkIcon);
+  it('should redirect to drink page on click meal button', async () => {
+    const initialEntries = ['/meals'];
+    const { history } = renderWithRouter(
+      <RecipesProvider>
+        <App />
+      </RecipesProvider>,
+      { initialEntries },
+    );
 
-    expect(history.location.pathname).toBe('/drinks');
+    act(() => {
+      userEvent.click(screen.getByTestId(mealButton));
+    });
+
+    await waitFor(() => {
+      expect(history.location.pathname).toBe('/meals');
+    });
   });
 });

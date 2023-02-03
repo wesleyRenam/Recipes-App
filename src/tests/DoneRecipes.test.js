@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import DoneRecipes from '../pages/DoneRecipes/DoneRecipes';
-import { renderWithRouter } from './helpers/RenderWithRouter';
+import { renderWithRouter } from './helpers/renderWithRouter';
 
 describe('test done recipes page', () => {
   const doneRecipes = [
@@ -138,5 +138,14 @@ describe('test done recipes page', () => {
     userEvent.click(shareButton);
 
     expect(recipesImage()).toHaveLength(1);
+  });
+  it('should render not recipes when no have done recipes', () => {
+    localStorage.clear();
+    renderWithRouter(<DoneRecipes />);
+    JSON.parse(localStorage.getItem('doneRecipes'));
+
+    const text = screen.getByText('Você não possui receitas inciadas.');
+
+    expect(text).toBeInTheDocument();
   });
 });

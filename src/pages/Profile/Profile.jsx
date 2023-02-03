@@ -14,7 +14,7 @@ function Profile() {
 
   return (
     <div>
-      <Header />
+      <Header title="Profile" searchButton={ false } />
       <div>
         <h1 data-testid="profile-email">{getItems ? getItems.email : 'usuario'}</h1>
         <Link

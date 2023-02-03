@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import FavoriteRecipes from '../pages/FavoriteRecipes/FavoriteRecipes';
-import { renderWithRouter } from './helpers/RenderWithRouter';
+import { renderWithRouter } from './helpers/renderWithRouter';
 
 describe('test done recipes page', () => {
   const favoriteRecipes = [
@@ -98,7 +98,7 @@ describe('test done recipes page', () => {
     JSON.parse(localStorage.getItem('FavoriteRecipes'));
 
     const shareButton = screen.getAllByAltText('share button');
-    expect(shareButton).toHaveLength(2);
+    expect(shareButton).toHaveLength(4);
   });
   it('should if click the shares button and receive data', async () => {
     renderWithRouter(<FavoriteRecipes />);
@@ -164,5 +164,14 @@ describe('test done recipes page', () => {
     userEvent.click(shareButton);
 
     expect(recipesImage()).toHaveLength(1);
+  });
+  it('should render not recipes when no have done recipes', () => {
+    localStorage.clear();
+    renderWithRouter(<FavoriteRecipes />);
+    JSON.parse(localStorage.getItem('FavoriteRecipes'));
+
+    const text = screen.getByText('Você não possui receitas favoritas.');
+
+    expect(text).toBeInTheDocument();
   });
 });

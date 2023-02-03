@@ -1,154 +1,98 @@
-import React, { useState } from 'react';
-import copy from 'clipboard-copy';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import DoneAndFavCard from '../../components/DoneAndFavCard/DoneAndFavCard';
 import Header from '../../components/Header/Header';
-import shareSvg from '../../images/shareIcon.svg';
-import blackHeartIcon from '../../images/blackHeartIcon.svg';
 
 function FavoriteRecipes() {
-  const [copied, setCopied] = useState('');
-  const [filter, setFilter] = useState([]);
-  const getLocalStorage = JSON.parse(localStorage.getItem('favoriteRecipes'));
+  const [filterRecipes, setFilterRecipes] = useState([]);
+  const [getItems, setGetItems] = useState([]);
 
-  const handleClick = (id, type) => {
-    const url = `http://localhost:3000/${type}s/${id}`;
-    copy(url);
-    setCopied('Link copied!');
-  };
+  useEffect(() => {
+    const localState = JSON.parse(localStorage.getItem('favoriteRecipes'));
+    if (!localState) return localStorage.setItem('favoriteRecipes', JSON.stringify([]));
+    return setGetItems(localState);
+  }, []);
 
   const handleFilter = (category) => {
-    const newFilter = getLocalStorage.filter((recipe) => recipe.type === category);
-    setFilter(newFilter);
+    const newFilter = getItems.filter((recipe) => recipe.type === category);
+    setFilterRecipes(newFilter);
   };
 
   const resetFilter = () => {
-    setFilter([]);
+    setFilterRecipes([]);
   };
 
   const setFavorite = (id) => {
-    const newFavs = getLocalStorage.filter((recipe) => recipe.id !== id);
+    const newFavs = getItems.filter((recipe) => recipe.id !== id);
     localStorage.setItem('favoriteRecipes', JSON.stringify(newFavs));
-    setFilter(newFavs);
+    setFilterRecipes(newFavs);
+    setGetItems(newFavs);
   };
 
   return (
     <div>
-      <Header />
-      <button data-testid="filter-by-all-btn" onClick={ resetFilter }>All</button>
+      <Header title="Favorite Recipes" searchButton={ false } />
+      <button
+        data-testid="filter-by-all-btn"
+        onClick={ resetFilter }
+      >
+        All
+      </button>
       <button
         data-testid="filter-by-meal-btn"
         onClick={ () => handleFilter('meal') }
       >
         Meals
-
       </button>
       <button
         data-testid="filter-by-drink-btn"
         onClick={ () => handleFilter('drink') }
       >
         Drinks
-
       </button>
-      {filter.length >= 1 ? (
-        filter.map((recipe, index) => (
-          <div key={ recipe.id }>
-            <div>
-              <Link to={ `/${recipe.type}s/${recipe.id}` }>
-                <img
-                  src={ recipe.image }
-                  alt="imagem da receita"
-                  data-testid={ `${index}-horizontal-image` }
-                  width={ 250 }
-                  height={ 250 }
-                />
-              </Link>
-              <p
-                data-testid={ `${index}-horizontal-top-text` }
-              >
-                {recipe.type === 'meal' ? `${recipe.nationality} - ${recipe.category}`
-                  : `${recipe.alcoholicOrNot}`}
-              </p>
-              <Link to={ `/${recipe.type}s/${recipe.id}` }>
-                <p data-testid={ `${index}-horizontal-name` }>
-                  {recipe.name}
-                </p>
-              </Link>
-              <p data-testid={ `${index}-horizontal-done-date` }>
-                {recipe.doneDate}
-              </p>
-            </div>
-            <div>
-              <button
-                onClick={ () => handleClick(recipe.id, recipe.type) }
-              >
-                <img
-                  src={ shareSvg }
-                  alt="share button"
-                  data-testid={ `${index}-horizontal-share-btn` }
-                />
-                {copied}
-              </button>
-              <button
-                onClick={ () => setFavorite(recipe.id) }
-              >
-                <img
-                  src={ blackHeartIcon }
-                  alt="favorite button"
-                  data-testid={ `${index}-horizontal-favorite-btn` }
-                />
-              </button>
-            </div>
-          </div>
-        ))
 
-      ) : (
-        getLocalStorage.map((recipe, index) => (
-          <div key={ recipe.id }>
-            <div>
-              <Link to={ `/${recipe.type}s/${recipe.id}` }>
-                <img
-                  src={ recipe.image }
-                  alt="imagem da receita"
-                  data-testid={ `${index}-horizontal-image` }
-                  width={ 250 }
-                  height={ 250 }
-                />
-              </Link>
-              <p
-                data-testid={ `${index}-horizontal-top-text` }
-              >
-                {recipe.type === 'meal' ? `${recipe.nationality} - ${recipe.category}`
-                  : `${recipe.alcoholicOrNot}`}
-              </p>
-              <Link to={ `/${recipe.type}s/${recipe.id}` }>
-                <p data-testid={ `${index}-horizontal-name` }>
-                  {recipe.name}
-                </p>
-              </Link>
-              <p data-testid={ `${index}-horizontal-done-date` }>
-                {recipe.doneDate}
-              </p>
-            </div>
-            <div>
-              <button onClick={ () => handleClick(recipe.id, recipe.type) }>
-                <img
-                  src={ shareSvg }
-                  alt="share button"
-                  data-testid={ `${index}-horizontal-share-btn` }
-                />
-                {copied}
-              </button>
-              <button onClick={ () => setFavorite(recipe.id) }>
-                <img
-                  src={ blackHeartIcon }
-                  alt="botão de favorito"
-                  data-testid={ `${index}-horizontal-favorite-btn` }
-                />
-              </button>
-            </div>
-          </div>
-        ))
-      )}
+      {
+        getItems.length === 0 && (
+          <p>Você não possui receitas favoritas.</p>
+        )
+      }
+
+      {
+        filterRecipes.length >= 1 ? (
+          filterRecipes.map((recipe, index) => (
+            <DoneAndFavCard
+              tags={ recipe.tags }
+              name={ recipe.name }
+              index={ index }
+              image={ recipe.image }
+              doneDate={ recipe.doneDate }
+              category={ recipe.category }
+              key={ index }
+              alcoholic={ recipe.alcoholicOrNot }
+              nationality={ recipe.nationality }
+              type={ recipe.type }
+              id={ recipe.id }
+              isFav={ setFavorite }
+            />
+          ))
+        ) : (
+          getItems.map((recipe, index) => (
+            <DoneAndFavCard
+              tags={ recipe.tags }
+              name={ recipe.name }
+              index={ index }
+              image={ recipe.image }
+              doneDate={ recipe.doneDate }
+              category={ recipe.category }
+              key={ index }
+              alcoholic={ recipe.alcoholicOrNot }
+              nationality={ recipe.nationality }
+              type={ recipe.type }
+              id={ recipe.id }
+              isFav={ setFavorite }
+            />
+          ))
+        )
+      }
 
     </div>
   );

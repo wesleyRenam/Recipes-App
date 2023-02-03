@@ -1,7 +1,6 @@
 import { useState } from 'react';
 
 function useFetch() {
-  const [errors, setErrors] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const makeFetch = async (url) => {
@@ -11,14 +10,14 @@ function useFetch() {
       const data = await res.json();
       return data;
     } catch (error) {
-      setErrors(error);
+      throw new Error(`Ocorreu um erro, por favor tente novamente mais tarde. ${error}`);
     } finally {
       setIsLoading(false);
     }
   };
 
   return {
-    errors, isLoading, makeFetch,
+    Error, isLoading, makeFetch,
   };
 }
 
