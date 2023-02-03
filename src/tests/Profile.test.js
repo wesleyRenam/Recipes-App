@@ -1,7 +1,7 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Profile from '../pages/Profile/Profile';
-import { renderWithRouter } from './helpers/RenderWithRouter';
+import { renderWithRouter } from './helpers/renderWithRouter';
 
 describe('', () => {
   const user = { user: 'teste@teste.com' };

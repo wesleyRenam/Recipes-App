@@ -1,146 +1,91 @@
-import React, { useState } from 'react';
-import copy from 'clipboard-copy';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import DoneAndFavCard from '../../components/DoneAndFavCard/DoneAndFavCard';
 import Header from '../../components/Header/Header';
-import shareSvg from '../../images/shareIcon.svg';
 
 function DoneRecipes() {
-  const [copied, setCopied] = useState('');
-  const [filter, setFilter] = useState([]);
-  const getLocalStorage = JSON.parse(localStorage.getItem('doneRecipes'));
+  const [filterRecipes, setFilterRecipes] = useState([]);
+  const [getItems, setGetItems] = useState([]);
 
-  const handleClick = (id, type) => {
-    const url = `http://localhost:3000/${type}s/${id}`;
-    copy(url);
-    setCopied('Link copied!');
-  };
+  useEffect(() => {
+    const localState = JSON.parse(localStorage.getItem('doneRecipes'));
+    if (!localState) return localStorage.setItem('doneRecipes', JSON.stringify([]));
+    return setGetItems(localState);
+  }, []);
 
   const handleFilter = (category) => {
-    const newFilter = getLocalStorage.filter((recipe) => recipe.type === category);
-    setFilter(newFilter);
+    const newFilter = getItems.filter((recipe) => recipe.type === category);
+    setFilterRecipes(newFilter);
   };
 
   const resetFilter = () => {
-    setFilter([]);
+    setFilterRecipes([]);
   };
 
   return (
     <div>
-      <Header />
-      <button data-testid="filter-by-all-btn" onClick={ resetFilter }>All</button>
+      <Header title="Done Recipes" searchButton={ false } />
+      <button
+        data-testid="filter-by-all-btn"
+        onClick={ resetFilter }
+      >
+        All
+      </button>
       <button
         data-testid="filter-by-meal-btn"
         onClick={ () => handleFilter('meal') }
       >
         Meals
-
       </button>
       <button
         data-testid="filter-by-drink-btn"
         onClick={ () => handleFilter('drink') }
       >
         Drinks
-
       </button>
 
-      {filter.length >= 1 ? (filter.map((recipe, index) => (
-        <div key={ recipe.id }>
-          <div>
-            <Link to={ `/${recipe.type}s/${recipe.id}` }>
-              <img
-                src={ recipe.image }
-                alt="imagem da receita"
-                data-testid={ `${index}-horizontal-image` }
-                width={ 250 }
-                height={ 250 }
-              />
-            </Link>
-            <p
-              data-testid={ `${index}-horizontal-top-text` }
-            >
-              {recipe.type === 'meal' ? `${recipe.nationality} - ${recipe.category}`
-                : `${recipe.alcoholicOrNot}`}
-            </p>
-            <Link to={ `/${recipe.type}s/${recipe.id}` }>
-              <p data-testid={ `${index}-horizontal-name` }>
-                {recipe.name}
-              </p>
-            </Link>
-            <p data-testid={ `${index}-horizontal-done-date` }>
-              {recipe.doneDate}
-            </p>
-          </div>
-          <div>
-            <button
-              data-testid={ `${index}-horizontal-share-btn` }
-              onClick={ () => handleClick(recipe.id, recipe.type) }
-            >
-              <img
-                src={ shareSvg }
-                alt="share button"
-              />
-              {copied}
-            </button>
-            {recipe.tags.map((tag) => (
-              <p
-                key={ tag }
-                data-testid={ `${index}-${tag}-horizontal-tag` }
-              >
-                {tag}
+      {
+        getItems.length === 0 && (
+          <p>Você não possui receitas inciadas.</p>
+        )
+      }
 
-              </p>
-            )).slice(0, 2)}
-          </div>
-        </div>
-      ))) : (getLocalStorage.map((recipe, index) => (
-        <div key={ recipe.id }>
-          <div>
-            <Link to={ `/${recipe.type}s/${recipe.id}` }>
-              <img
-                src={ recipe.image }
-                alt="imagem da receita"
-                data-testid={ `${index}-horizontal-image` }
-                width={ 250 }
-                height={ 250 }
-              />
-            </Link>
-            <p
-              data-testid={ `${index}-horizontal-top-text` }
-            >
-              {recipe.type === 'meal' ? `${recipe.nationality} - ${recipe.category}`
-                : `${recipe.alcoholicOrNot}`}
-            </p>
-            <Link to={ `/${recipe.type}s/${recipe.id}` }>
-              <p data-testid={ `${index}-horizontal-name` }>
-                {recipe.name}
-              </p>
-            </Link>
-            <p data-testid={ `${index}-horizontal-done-date` }>
-              {recipe.doneDate}
-            </p>
-          </div>
-          <div>
-            <button onClick={ () => handleClick(recipe.id, recipe.type) }>
-              <img
-                src={ shareSvg }
-                alt="share button"
-                data-testid={ `${index}-horizontal-share-btn` }
-              />
-              {copied}
-            </button>
-            {recipe.tags.map((tag) => (
-              <p
-                key={ tag }
-                data-testid={ `${index}-${tag}-horizontal-tag` }
-              >
-                {tag}
-
-              </p>
-            )).slice(0, 2)}
-          </div>
-        </div>
-      )))}
-
+      {
+        filterRecipes.length >= 1 ? (
+          filterRecipes.map((recipe, index) => (
+            <DoneAndFavCard
+              tags={ recipe.tags }
+              name={ recipe.name }
+              index={ index }
+              image={ recipe.image }
+              doneDate={ recipe.doneDate }
+              category={ recipe.category }
+              key={ index }
+              alcoholic={ recipe.alcoholic }
+              nationality={ recipe.nationality }
+              type={ recipe.type }
+              id={ recipe.id }
+              done
+            />
+          ))
+        ) : (
+          getItems.map((recipe, index) => (
+            <DoneAndFavCard
+              tags={ recipe.tags }
+              name={ recipe.name }
+              index={ index }
+              image={ recipe.image }
+              doneDate={ recipe.doneDate }
+              category={ recipe.category }
+              key={ index }
+              alcoholic={ recipe.alcoholicOrNot }
+              nationality={ recipe.nationality }
+              type={ recipe.type }
+              id={ recipe.id }
+              done
+            />
+          ))
+        )
+      }
     </div>
   );
 }

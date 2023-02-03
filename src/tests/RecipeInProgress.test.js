@@ -1,39 +1,38 @@
-import { act, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
+import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
 import { wait } from '@testing-library/user-event/dist/utils';
-import drinks from '../../cypress/mocks/drinks';
-import oneMeal from '../../cypress/mocks/oneMeal';
 import RecipesProvider, { RecipesContext } from '../context/RecipesProvider';
 import * as useGetLocalStorage from '../hooks/useGetLocalStorage';
-import RecipeDetails from '../pages/RecipeDetails/RecipeDetails';
+import RecipeInProgress from '../pages/RecipeInProgress/RecipeInProgress';
 import { renderWithRouter } from './helpers/renderWithRouter';
+import { drinks } from '../../cypress/mocks/drinks';
 
 const favoriteButton = 'favorite-btn';
-const startButton = 'start-recipe-btn';
 
-describe('recipes details', () => {
-  beforeEach(() => {
+describe('recipe in progress', () => {
+  beforeAll(() => {
     jest.clearAllMocks();
   });
 
-  it('should render all drinks elements correctly', async () => {
+  it('should render all drinks elements', () => {
     const initialEntries = ['/drinks'];
     renderWithRouter(
       <RecipesProvider>
-        <RecipeDetails />
+        <RecipeInProgress />
       </RecipesProvider>,
       { initialEntries },
     );
 
     expect(screen.getByTestId('share-btn')).toBeInTheDocument();
     expect(screen.getByTestId(favoriteButton)).toBeInTheDocument();
-    expect(screen.getByTestId(startButton)).toBeInTheDocument();
   });
-  it('should render all meals elements correctly', async () => {
+
+  it('should render all meals elements', () => {
     const initialEntries = ['/meals'];
     renderWithRouter(
       <RecipesProvider>
-        <RecipeDetails />
+        <RecipeInProgress />
       </RecipesProvider>,
       { initialEntries },
     );
@@ -41,11 +40,12 @@ describe('recipes details', () => {
     expect(screen.getByTestId('share-btn')).toBeInTheDocument();
     expect(screen.getByTestId(favoriteButton)).toBeInTheDocument();
   });
+
   it('should render clicked on click in share button', async () => {
     const initialEntries = ['/meals'];
     renderWithRouter(
       <RecipesProvider>
-        <RecipeDetails />
+        <RecipeInProgress />
       </RecipesProvider>,
       { initialEntries },
     );
@@ -66,133 +66,6 @@ describe('recipes details', () => {
       expect(linkCopied).toBeInTheDocument();
       expect(mockedWriteText).toBeCalledWith('http://localhost/meals/52771');
     });
-  });
-  it('should redirect to correct page on click in start recipe', () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: jest.fn().mockResolvedValue(oneMeal),
-    });
-
-    const initialEntries = ['/meals/52771'];
-    const { history } = renderWithRouter(
-      <RecipesProvider>
-        <RecipeDetails />
-      </RecipesProvider>,
-      { initialEntries },
-    );
-    const startRecipeBtn = screen.getByTestId(startButton);
-
-    act(() => {
-      userEvent.click(startRecipeBtn);
-    });
-
-    expect(history.location.pathname).toBe('/meals/52771/in-progress');
-  });
-
-  it('should redirect to correct page with inProgress is true', () => {
-    jest.spyOn(useGetLocalStorage, 'default').mockReturnValue({
-      ingredientsChecked: [],
-      isFavorite: false,
-      inProgress: true,
-      setInProgress: jest.fn(),
-      setIsFavorite: jest.fn(),
-    });
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: jest.fn().mockResolvedValue(oneMeal),
-    });
-
-    const initialEntries = ['/meals/52771'];
-    const { history } = renderWithRouter(
-      <RecipesProvider>
-        <RecipeDetails />
-      </RecipesProvider>,
-      { initialEntries },
-    );
-    const startRecipeBtn = screen.getByTestId(startButton);
-
-    act(() => {
-      userEvent.click(startRecipeBtn);
-    });
-
-    expect(history.location.pathname).toBe('/meals/52771/in-progress');
-  });
-  it('should render continue recipe with inProgress is true', async () => {
-    jest.spyOn(useGetLocalStorage, 'default').mockReturnValue({
-      ingredientsChecked: [],
-      isFavorite: false,
-      inProgress: true,
-      setInProgress: jest.fn(),
-      setIsFavorite: jest.fn(),
-    });
-
-    renderWithRouter(
-      <RecipesProvider>
-        <RecipeDetails />
-      </RecipesProvider>,
-    );
-
-    const startRecipeBtn = screen.getByTestId(startButton);
-    expect(startRecipeBtn).toBeInTheDocument();
-
-    expect(startRecipeBtn).toHaveTextContent('Continue Recipe');
-  });
-
-  it('should set favorite on click favorite button', () => {
-    jest.spyOn(useGetLocalStorage, 'default').mockReturnValue({
-      ingredientsChecked: [],
-      isFavorite: false,
-      inProgress: false,
-      setInProgress: jest.fn(),
-      setIsFavorite: jest.fn(),
-    });
-    renderWithRouter(
-      <RecipesProvider>
-        <RecipeDetails />
-      </RecipesProvider>,
-    );
-
-    const favBtn = screen.getByTestId(favoriteButton);
-
-    act(() => {
-      userEvent.click(favBtn);
-    });
-
-    expect(favBtn).toHaveAttribute('src', 'blackHeartIcon.svg');
-
-    act(() => {
-      userEvent.click(favBtn);
-    });
-
-    expect(favBtn).toHaveAttribute('src', 'whiteHeartIcon.svg');
-  });
-  it('should render ingredients correctly', async () => {
-    jest.spyOn(useGetLocalStorage, 'default').mockReturnValue({
-      ingredientsChecked: [],
-      isFavorite: false,
-      inProgress: false,
-      setInProgress: jest.fn(),
-      setIsFavorite: jest.fn(),
-    });
-
-    renderWithRouter(
-      <RecipesContext.Provider
-        value={
-          { setRecipeDetail: jest.fn(),
-            setRecipes: jest.fn(),
-            setIngredients: jest.fn(),
-            setFilterRecipes: jest.fn(),
-            filterRecipes: drinks.drinks,
-            recipe: drinks.drinks,
-            ingredients: {
-              ingredients: ['ingredient1', 'ingredient2', 'ingredient3'],
-              measures: ['measure1', 'measure2'],
-            } }
-        }
-      >
-        <RecipeDetails />
-      </RecipesContext.Provider>,
-    );
-
-    expect(await screen.findByTestId('0-ingredient-name-and-measure')).toBeInTheDocument();
   });
   it('should not render ingredients when function not work', async () => {
     jest.spyOn(useGetLocalStorage, 'default').mockReturnValue({
@@ -271,8 +144,57 @@ describe('recipes details', () => {
             } }
         }
       >
-        <RecipeDetails />
+        <RecipeInProgress />
       </RecipesContext.Provider>,
     );
+  });
+
+  it('should set favorite on click favorite button', () => {
+    jest.spyOn(useGetLocalStorage, 'default').mockReturnValue({
+      ingredientsChecked: [],
+      isFavorite: false,
+      inProgress: false,
+      setInProgress: jest.fn(),
+      setIsFavorite: jest.fn(),
+    });
+    renderWithRouter(
+      <RecipesProvider>
+        <RecipeInProgress />
+      </RecipesProvider>,
+    );
+
+    const favBtn = screen.getByTestId(favoriteButton);
+
+    act(() => {
+      userEvent.click(favBtn);
+    });
+
+    expect(favBtn).toHaveAttribute('src', 'blackHeartIcon.svg');
+
+    act(() => {
+      userEvent.click(favBtn);
+    });
+
+    expect(favBtn).toHaveAttribute('src', 'whiteHeartIcon.svg');
+  });
+  it('should set favorite on click favorite button', () => {
+    jest.spyOn(useGetLocalStorage, 'default').mockReturnValue({
+      ingredientsChecked: [],
+      isFavorite: false,
+      inProgress: false,
+      setInProgress: jest.fn(),
+      setIsFavorite: jest.fn(),
+    });
+    renderWithRouter(
+      <RecipesProvider>
+        <RecipeInProgress />
+      </RecipesProvider>,
+    );
+
+    const finishBtn = screen.getByTestId('finish-recipe-btn');
+
+    act(() => {
+      userEvent.click(finishBtn);
+    });
   });
 });

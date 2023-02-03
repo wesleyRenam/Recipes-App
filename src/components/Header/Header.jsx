@@ -1,64 +1,63 @@
-import React, { useContext, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import { RecipesContext } from '../../context/RecipesProvider';
-import profileIcon from '../../images/profileIcon.svg';
-import searchIcon from '../../images/searchIcon.svg';
-import SearchBar from './SearchBar';
+import React, { useState } from 'react';
+import propTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
+import ProfileIcon from '../../images/profileIcon.svg';
+import SearchIcon from '../../images/searchIcon.svg';
+import SearchBar from '../SearchBar/SearchBar';
 
-function Header() {
-  const { pathname } = useLocation();
+function Header({ title, profileButton, searchButton }) {
+  const [isSearch, setIsSearch] = useState(false);
 
   const history = useHistory();
 
-  let str = pathname.replace(/-/g, ' ');
-  str = str.replace(/\b\w/g, (l) => l.toUpperCase());
-  str = str.replace('/', '');
+  const profileRedirect = () => {
+    history.push('/profile');
+  };
 
-  const [searchBar, setSearchBar] = useState(false);
+  const handleToggle = () => {
+    setIsSearch(!isSearch);
+  };
 
-  const pesquisa = (pathname === '/meals' || pathname === '/drinks');
-
-  const { searchInput, setSearchInput } = useContext(RecipesContext);
   return (
-    <div>
-      <button
-        type="button"
-        onClick={ () => history.push('/profile') }
-      >
-        <img
-          src={ profileIcon }
-          alt="profile-icon"
-          data-testid="profile-top-btn"
-        />
-      </button>
-      { pesquisa ? (
-        <button
-          type="button"
-          onClick={ () => setSearchBar(!searchBar) }
-        >
+    <header>
+      { profileButton && (
+        <button onClick={ profileRedirect }>
           <img
-            src={ searchIcon }
-            alt="search-icon"
-            data-testid="search-top-btn"
+            src={ ProfileIcon }
+            data-testid="profile-top-btn"
+            alt="Icone de perfil"
           />
         </button>
-      ) : ''}
-      <h1 data-testid="page-title">
-        { str }
-      </h1>
-      { searchBar ? (
-        <div>
-          <input
-            data-testid="search-input"
-            type="text"
-            value={ searchInput }
-            onChange={ (e) => { setSearchInput(e.target.value); } }
+      )}
+      { searchButton && (
+        <button onClick={ handleToggle }>
+          <img
+            src={ SearchIcon }
+            data-testid="search-top-btn"
+            alt="Icone de Pesquisa"
           />
-          <SearchBar />
-        </div>)
-        : ''}
-    </div>
+        </button>
+      )}
+      <h1 data-testid="page-title">{title}</h1>
+      {
+        isSearch && (
+          <SearchBar pathname={ history.location.pathname } />
+        )
+      }
+    </header>
   );
 }
+
+Header.propTypes = {
+  title: propTypes.string,
+  profileButton: propTypes.bool,
+  searchButton: propTypes.bool,
+};
+
+Header.defaultProps = {
+  title: 'header',
+  profileButton: true,
+  searchButton: true,
+};
 
 export default Header;
