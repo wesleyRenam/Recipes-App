@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import copy from 'clipboard-copy';
+import { MdFavorite, MdShare } from 'react-icons/md';
 import Button from '../Button/Button';
-import shareIcon from '../../images/shareIcon.svg';
-import blackHeartIcon from '../../images/blackHeartIcon.svg';
+import * as S from './style';
 
 function DoneAndFavCard({
   name,
@@ -22,9 +22,8 @@ function DoneAndFavCard({
   };
 
   return (
-    <div>
+    <S.DoneContainer>
       <Link to={ `/${type}s/${id}` }>
-        <h1 data-testid={ `${index}-horizontal-name` }>{name}</h1>
         <img
           src={ image }
           alt="imagem da receita"
@@ -32,6 +31,7 @@ function DoneAndFavCard({
           width={ 250 }
           height={ 200 }
         />
+        <h1 data-testid={ `${index}-horizontal-name` }>{name}</h1>
       </Link>
       <p
         data-testid={ `${index}-horizontal-top-text` }
@@ -59,28 +59,37 @@ function DoneAndFavCard({
         done ? (
           <Button
             handleClick={ handleShare }
-            src={ shareIcon }
             alt="share button"
             id={ `${index}-horizontal-share-btn` }
-          />
+            color="secondary"
+            size="35px"
+          >
+            <MdShare />
+          </Button>
         ) : (
           <>
             <Button
               handleClick={ handleFavorite }
-              src={ blackHeartIcon }
               alt="share button"
               id={ `${index}-horizontal-favorite-btn` }
-            />
+              color="secondary"
+              size="35px"
+            >
+              <MdFavorite />
+            </Button>
             <Button
               handleClick={ handleShare }
-              src={ shareIcon }
               alt="share button"
               id={ `${index}-horizontal-share-btn` }
-            />
+              color="secondary"
+              size="35px"
+            >
+              <MdShare />
+            </Button>
           </>
         )
       }
-    </div>
+    </S.DoneContainer>
   );
 }
 
