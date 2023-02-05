@@ -56,49 +56,51 @@ function DoneRecipes() {
         </Button>
       </S.ButtonsContainer>
 
-      {
-        getItems.length === 0 && (
-          <p>Você não possui receitas inciadas.</p>
-        )
-      }
+      <S.RecipesContainer>
+        {
+          getItems.length === 0 && (
+            <p>Você não possui receitas inciadas.</p>
+          )
+        }
 
-      {
-        filterRecipes.length >= 1 ? (
-          filterRecipes.map((recipe, index) => (
-            <DoneAndFavCard
-              tags={ recipe.tags }
-              name={ recipe.name }
-              index={ index }
-              image={ recipe.image }
-              doneDate={ recipe.doneDate }
-              category={ recipe.category }
-              key={ index }
-              alcoholic={ recipe.alcoholic }
-              nationality={ recipe.nationality }
-              type={ recipe.type }
-              id={ recipe.id }
-              done
-            />
-          ))
-        ) : (
-          getItems.map((recipe, index) => (
-            <DoneAndFavCard
-              tags={ recipe.tags }
-              name={ recipe.name }
-              index={ index }
-              image={ recipe.image }
-              doneDate={ recipe.doneDate }
-              category={ recipe.category }
-              key={ index }
-              alcoholic={ recipe.alcoholicOrNot }
-              nationality={ recipe.nationality }
-              type={ recipe.type }
-              id={ recipe.id }
-              done
-            />
-          ))
-        )
-      }
+        {
+          filterRecipes.length >= 1 ? (
+            filterRecipes.map((recipe, index) => (
+              <DoneAndFavCard
+                tags={ recipe.tags }
+                name={ recipe.name }
+                index={ index }
+                image={ recipe.image }
+                doneDate={ recipe.doneDate }
+                category={ recipe.category }
+                key={ index }
+                alcoholic={ recipe.alcoholic }
+                nationality={ recipe.nationality }
+                type={ recipe.type }
+                id={ recipe.id }
+                done
+              />
+            ))
+          ) : (
+            getItems.map((recipe, index) => (
+              <DoneAndFavCard
+                tags={ recipe.tags }
+                name={ recipe.name }
+                index={ index }
+                image={ recipe.image }
+                doneDate={ recipe.doneDate }
+                category={ recipe.category }
+                key={ index }
+                alcoholic={ recipe.alcoholicOrNot }
+                nationality={ recipe.nationality }
+                type={ recipe.type }
+                id={ recipe.id }
+                done
+              />
+            ))
+          )
+        }
+      </S.RecipesContainer>
     </div>
   );
 }

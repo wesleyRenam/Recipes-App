@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import Footer from '../../components/Footer/Footer';
 import Header from '../../components/Header/Header';
+import { ProfileContainer } from './style';
 
 function Profile() {
   const getItems = JSON.parse(localStorage.getItem('user'));
@@ -15,8 +16,8 @@ function Profile() {
   return (
     <div>
       <Header title="Profile" searchButton={ false } />
-      <div>
-        <h1 data-testid="profile-email">{getItems ? getItems.email : 'usuario'}</h1>
+      <ProfileContainer>
+        <h3 data-testid="profile-email">{getItems ? getItems.email : 'usuario'}</h3>
         <Link
           to="/done-recipes"
           data-testid="profile-done-btn"
@@ -38,7 +39,7 @@ function Profile() {
           Logout
 
         </button>
-      </div>
+      </ProfileContainer>
       <Footer />
     </div>
   );
