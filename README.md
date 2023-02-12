@@ -1,13 +1,27 @@
-# :construction: README customizado em construção ! :construction:
-<!-- Olá, Tryber!
-Esse é apenas um arquivo inicial para o README do seu projeto no qual você pode customizar e reutilizar todas as vezes que for executar o trybe-publisher.
+#Receita App
+Este projeto é um aplicativo de receitas desenvolvido por um grupo de 5 pessoas utilizando React, React Hooks, Context Api, API Rest.
 
-Para deixá-lo com a sua cara, basta alterar o seguinte arquivo da sua máquina: ~/.student-repo-publisher/custom/_NEW_README.md
+##Funcionalidades
+*Adição de receitas
+*Listagem de receitas
+*Detalhes de cada receita com ingredientes e instruções
+*Busca por receitas
+*Adição de receitas a uma lista de favoritos
+*Adicionar receitas para progresso e depois continua-las 
+##Instalação
+*Clone este repositório: git clone git@github.com:wesleyRenam/Recipes-App.git
+*Instale as dependências: npm install
+*Inicie a aplicação: npm start
+##Contribuições
+Todas as contribuições são bem-vindas. Siga estas etapas para contribuir:
 
-É essencial que você preencha esse documento por conta própria, ok?
-Não deixe de usar nossas dicas de escrita de README de projetos, e deixe sua criatividade brilhar!
-:warning: IMPORTANTE: você precisa deixar nítido:
-- quais arquivos/pastas foram desenvolvidos por você; 
-- quais arquivos/pastas foram desenvolvidos por outra pessoa estudante;
-- quais arquivos/pastas foram desenvolvidos pela Trybe.
--->
+*Faça um fork deste repositório
+*Crie uma branch para sua contribuição: git checkout -b minha-contribuicao
+*Faça suas alterações e envie para o seu repositório
+*Crie um pull request para este repositório
+##Equipe
+[Wesley Renam] (https://github.com/wesleyRenam)
+[Raphael Baere] (https://github.com/raphaelbaere)
+[Antonio Wingert] (https://github.com/AntonioWingert)
+[Eduardo Maurício] (https://github.com/edudias1972)
+Icaro Souza
