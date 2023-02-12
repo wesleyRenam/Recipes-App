@@ -20,8 +20,8 @@ Todas as contribuições são bem-vindas. Siga estas etapas para contribuir:
 * Faça suas alterações e envie para o seu repositório
 * Crie um pull request para este repositório
 ## Equipe
-* [Wesley Renam] (https://github.com/wesleyRenam)
-* [Raphael Baere] (https://github.com/raphaelbaere)
-* [Antonio Wingert] (https://github.com/AntonioWingert)
-* [Eduardo Maurício] (https://github.com/edudias1972)
+* [Wesley Renam](https://github.com/wesleyRenam)
+* [Raphael Baere](https://github.com/raphaelbaere)
+* [Antonio Wingert](https://github.com/AntonioWingert)
+* [Eduardo Maurício](https://github.com/edudias1972)
 * Icaro Souza
