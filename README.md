@@ -1,6 +1,8 @@
 # Receita App
 Este projeto é um aplicativo de receitas desenvolvido por um grupo de 5 pessoas utilizando React, React Hooks, Context Api, API Rest.
 
+## [Visite o Site](https://recipes-app-mocha.vercel.app/)
+
 ## Funcionalidades
 * Adição de receitas
 * Listagem de receitas
